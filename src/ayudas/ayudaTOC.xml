@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>  
+<toc version="1.0" categoryopenimage="imgCarpetaAbierta" categoryclosedimage="imgCarpetaCerrada" topicimage="imgArchivo">  
+        <tocitem text="Opciones" target="pagOpciones" expand=false>   
+        	<tocitem text="Contactos" target="pagContactos"/>  
+                <tocitem text="Grupos" target="pagGrupos"/>
+                <tocitem text="Conversacion" target="pagConver"/>
+                <tocitem text="Informes" target="pagInformes"/>
+        </tocitem>  
+
+</toc> 

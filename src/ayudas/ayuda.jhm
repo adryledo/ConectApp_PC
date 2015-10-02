@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>  
+<map version="1.0">  
+    
+    <mapID target="pagOpciones"  url="paginas/opciones.html"/>
+    <mapID target="pagContactos" url="paginas/contactos.html"/>
+    <mapID target="pagGrupos" url="paginas/grupos.html"/>
+    <mapID target="pagConver" url="paginas/conversacion.html"/>
+    <mapID target="pagInformes" url="paginas/informes.html"/>
+
+    <mapID target="imgAnterior" url="imagenes/back.gif"/>
+    <mapID target="imgSiguiente" url="imagenes/forward.gif"/>
+    <mapID target="imgTOC" url="imagenes/contents.gif"/>
+    <mapID target="imgIndice" url="imagenes/view_text.gif"/>
+    <mapID target="imgBusqueda" url="imagenes/search.gif"/>
+    <mapID target="imgCarpetaAbierta" url="imagenes/folder_new.gif"/>
+    <mapID target="imgCarpetaCerrada" url="imagenes/bookmark_folder.gif"/>
+    <mapID target="imgAchivo" url="imagenes/filenew.gif"/>
+    <mapID target="imgAyuda" url="imagenes/help.gif"/>
+    <mapID target="imgFavoritos" url="imagenes/bookmark.gif"/>
+    <mapID target="imgAnhadirFavorito" url="imagenes/bookmark_add.gif"/>
+</map>

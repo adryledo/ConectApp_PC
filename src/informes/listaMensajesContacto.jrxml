@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="listaMensajesContacto" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fc20a185-79ca-436f-b813-10f128da203a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CONTACTO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT C.NOMBRE AS 'CONTACTO', MENSAJE, SOYRECEPTOR FROM CONTACTOS C, MENSAJES M WHERE IDCONTACTO LIKE $P{CONTACTO}]]>
+	</queryString>
+	<field name="CONTACTO" class="java.lang.String"/>
+	<field name="MENSAJE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SOYRECEPTOR" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="f0d6070c-0430-4fc7-b44e-0f5fc5efd45d" x="118" y="23" width="367" height="34"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lista de Mensajes por Contacto]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="9d6f543e-f92c-4087-b097-96a396506648" x="0" y="0" width="185" height="20"/>
+				<textElement/>
+				<text><![CDATA[CONTACTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="903b54bd-f623-478e-a60b-ea616a0e139d" x="185" y="0" width="185" height="20"/>
+				<textElement/>
+				<text><![CDATA[MENSAJE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7f7abb3d-1945-46a3-8c69-82bc2e7176f7" x="370" y="0" width="185" height="20"/>
+				<textElement/>
+				<text><![CDATA[SOYRECEPTOR]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="43" splitType="Stretch">
+			<textField>
+				<reportElement uuid="48bc1b32-4165-46eb-88ef-d4ce8a76dd92" x="0" y="0" width="185" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{CONTACTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="787b3b1d-7590-400c-9c9d-0ea77dac2d31" x="185" y="0" width="185" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{MENSAJE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1bc1889e-1ca9-4264-804f-b928ecc66543" x="370" y="0" width="185" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{SOYRECEPTOR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
