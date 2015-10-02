@@ -383,6 +383,24 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                         }
                     }
                     break;
+                case CodigoMetodo.ELIMINAR_CONTACTO:
+                    if(comE.getResultado() != 0)
+                    {
+                        JOptionPane.showMessageDialog(this, "El contacto no pudo ser eliminado");
+                    } else
+                    {
+                        JOptionPane.showMessageDialog(this, "Contacto eliminado");
+                    }
+                    break;
+                case CodigoMetodo.MODIFICAR_CONTACTO:
+                    if(comE.getResultado() != 0)
+                    {
+                        JOptionPane.showMessageDialog(this, "El contacto no pudo ser modificado");
+                    } else
+                    {
+                        JOptionPane.showMessageDialog(this, "Contacto modificado");
+                    }
+                    break;
                 default:
                     break;
             }
@@ -470,6 +488,25 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
     void actualizarContactos() {
         try {
             this.objFlujoS.writeObject(CodigoMetodo.LISTAR_CONTACTOS);
+            this.objFlujoS.writeObject(this.login.getAlias());
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void eliminarContacto(Contacto contacto) {
+        try {
+            this.objFlujoS.writeObject(CodigoMetodo.ELIMINAR_CONTACTO);
+            this.objFlujoS.writeObject(contacto);
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void modificarContacto(Contacto c) {
+        try {
+            this.objFlujoS.writeObject(CodigoMetodo.MODIFICAR_CONTACTO);
+            this.objFlujoS.writeObject(c);
         } catch (IOException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }

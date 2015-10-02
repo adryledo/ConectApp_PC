@@ -305,18 +305,12 @@ private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
     if(this.lstContactos.isSelectionEmpty())
     {
-        /*EjecutarMetodoServ insContacto = new EjecutarMetodoServ(CodigoMetodo.INSERTAR_CONTACTO, c);
-        this.t = new Thread(insContacto);
-        this.t.start();*/
         this.principal.guardarContacto(c);
     }
-    /*else
+    else
     {
-        c.setAlias(this.mdlContactos.getElementAt(this.lstContactos.getSelectedIndex()).getAlias());
-        EjecutarMetodoServ modContacto = new EjecutarMetodoServ(CodigoMetodo.MODIFICAR_CONTACTO, c);
-        this.t = new Thread(modContacto);
-        this.t.start();
-    }*/
+        this.principal.modificarContacto(c);
+    }
     this.principal.actualizarContactos();
     this.limpiarCampos();
 }//GEN-LAST:event_btnGuardarActionPerformed
@@ -335,6 +329,8 @@ private void lstContactosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRS
         this.limpiarCampos();
         return;
     }
+    this.txtAlias.setEnabled(false);
+    
     Contacto c = this.mdlContactos.elementAt(seleccionado);
     this.txtAlias.setText(c.getAliasContacto());
     this.txtNombre.setText(c.getNombre());
@@ -361,9 +357,8 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         return;
     }
     
-    /*EjecutarMetodoServ elimContacto = new EjecutarMetodoServ(CodigoMetodo.ELIMINAR_CONTACTO, this.mdlContactos.elementAt(this.lstContactos.getSelectedIndex()));
-    this.t = new Thread(elimContacto);
-    this.t.start();*/
+    this.principal.eliminarContacto((Contacto)this.lstContactos.getSelectedValue());
+    this.limpiarCampos();
     this.principal.actualizarContactos();
 }//GEN-LAST:event_btnEliminarActionPerformed
 
@@ -404,6 +399,7 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         //mostrarContactos();
         this.cmbGrupo.setSelectedIndex(-1);
         this.lstContactos.clearSelection();
+        this.txtAlias.setEnabled(true);
     }
 
     /*protected void mostrarContactos() {

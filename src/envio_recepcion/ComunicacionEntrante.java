@@ -69,6 +69,14 @@ public class ComunicacionEntrante extends Subject implements Runnable
                         this.contactos = (ArrayList<Contacto>) objFlujoE.readObject();
                         this.notifyObservers();
                         break;
+                    case CodigoMetodo.ELIMINAR_CONTACTO:
+                        this.resultado = (int) objFlujoE.readObject();
+                        this.notifyObservers();
+                        break;
+                    case CodigoMetodo.MODIFICAR_CONTACTO:
+                        this.resultado = (int) objFlujoE.readObject();
+                        this.notifyObservers();
+                        break;
                     default:
                         break;
                 }
