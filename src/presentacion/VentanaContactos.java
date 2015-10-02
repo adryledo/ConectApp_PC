@@ -401,115 +401,13 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.lstContactos.clearSelection();
         this.txtAlias.setEnabled(true);
     }
-
-    /*protected void mostrarContactos() {
-        this.mdlContactos.clear();
-        try {
-            //EjecutarMetodoServ listarContactos = new EjecutarMetodoServ(CodigoMetodo.LISTAR_CONTACTOS);
-            //this.t = new Thread(listarContactos);
-            //this.t.start();
-            synchronized(this.principal.getSocket())
-            {
-                OutputStream flujoSalida = this.principal.getSocket().getOutputStream();
-                ObjectOutputStream objFlujoS = new ObjectOutputStream(flujoSalida);
-                objFlujoS.writeObject(CodigoMetodo.LISTAR_CONTACTOS);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(VentanaContactos.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }*/
-
-/*    
-    @Override
-    public void update(Subject subject) {
-        if(subject instanceof RecibirMetodoServ)
-        {
-            RecibirMetodoServ metodo = (RecibirMetodoServ) subject;
-            switch(metodo.getCodigo())
-            {
-                case CodigoMetodo.INSERTAR_CONTACTO:
-                    switch(metodo.getResultado())
-                    {
-                        case 0:
-                            JOptionPane.showMessageDialog(this, "Contacto insertado");
-                            limpiarCampos();
-                            break;
-                        case -1:
-                            JOptionPane.showMessageDialog(this, "Fallo al insertar el contacto");
-                            break;
-                        case -2:
-                            JOptionPane.showMessageDialog(this, "Ya existe un contacto con esa ip");
-                            break;
-                    }
-                break;
-                case CodigoMetodo.MODIFICAR_CONTACTO:
-                    switch(metodo.getResultado())
-                    {
-                        case 0:
-                            JOptionPane.showMessageDialog(this, "Contacto modificado");
-                            limpiarCampos();
-                            break;
-                        case -1:
-                            JOptionPane.showMessageDialog(this, "Fallo al modificar el contacto");
-                            break;
-                    }
-                break;
-                case CodigoMetodo.ELIMINAR_CONTACTO:
-                    switch(metodo.getResultado())
-                    {
-                        case 0:
-                            JOptionPane.showMessageDialog(this, "Contacto eliminado");
-                            limpiarCampos();
-                            break;
-                        case -1:
-                            JOptionPane.showMessageDialog(this, "No se pudo eliminar el contacto");
-                            break;
-                        case -2:
-                            JOptionPane.showMessageDialog(this, "Error por integridad referencial");
-                            break;
-                    }
-                break;
-                case CodigoMetodo.LISTAR_GRUPOS:
-                    ArrayList<Object> grupos = (ArrayList<Object>) metodo.getLista();
-                    grupos.stream().forEach((grupo) -> {
-                        this.mdlGrupos.addElement((Grupo)grupo);
-                    });
-                    this.cmbGrupo.repaint();
-                    this.cmbGrupo.setSelectedIndex(-1);
-                break;
-                case CodigoMetodo.LISTAR_CONTACTOS:
-                    ArrayList<Object> contactos = (ArrayList<Object>) metodo.getLista();
-                    contactos.stream().forEach((c) -> {
-                        this.mdlContactos.addElement((Contacto)c);
-                    });
-                    this.lstContactos.repaint();
-                //    this.principal.mostrarContactos();
-                    this.principal.actualizarContactos();
-                break;
-            }
-        //    terminarThread();
-        }
-    }
-*/    
+   
     protected void actualizarMdlContactos(ArrayList contactos)
     {
         this.mdlContactos.clear();
-        /*for(Object c : contactos)
-        {
-            this.mdlContactos.addElement((Contacto)c);
-        }*/
-        // esta sentencia sustitutye al foreach anterior
         contactos.stream().forEach((c) -> {
             this.mdlContactos.addElement((Contacto)c);
         });
         this.lstContactos.repaint();
-        //this.principal.mostrarContactos();
     }
-/*
-    private void terminarThread() {
-        if(this.t.isAlive())
-        {
-            this.t.interrupt();
-        }
-    }*/
 }

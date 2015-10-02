@@ -2,6 +2,7 @@ package presentacion;
 
 import clases.CodigoMetodo;
 import clases.Contacto;
+import clases.Grupo;
 import clases.Usuario;
 import envio_recepcion.ComunicacionEntrante;
 import envio_recepcion.Observer;
@@ -34,9 +35,9 @@ import javax.swing.JOptionPane;
 public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
 
     private JDesktopPane escritorio;
-    private VentanaContactos contactos;
-    /*private VentanaGrupos grupos;
-    private DialogSeleccionContacto conversacion;*/
+    private VentanaContactos vContactos;
+    private VentanaGrupos vGrupos;
+    /*private DialogSeleccionContacto conversacion;*/
     private DialogIniciarSesion dlgInicioSesion;
     
     private File fileAplicacion;
@@ -204,8 +205,8 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
 private void mnuContactosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuContactosActionPerformed
     if(!GestorVentanas.isContactosAbierta())
     {
-        this.contactos = new VentanaContactos(this);
-        this.escritorio.add(this.contactos);
+        this.vContactos = new VentanaContactos(this);
+        this.escritorio.add(this.vContactos);
         GestorVentanas.setContactosAbierta(true);
     }
 }//GEN-LAST:event_mnuContactosActionPerformed
@@ -225,12 +226,12 @@ private void mnuInformesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 }//GEN-LAST:event_mnuInformesActionPerformed
 
 private void mnuGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuGruposActionPerformed
-    /*if(!GestorVentanas.isGruposAbierta())
+    if(!GestorVentanas.isGruposAbierta())
     {
-        this.grupos = new VentanaGrupos(this);
-        this.escritorio.add(this.grupos);
+        this.vGrupos = new VentanaGrupos(this);
+        this.escritorio.add(this.vGrupos);
         GestorVentanas.setGruposAbierta(true);
-    }*/
+    }
 }//GEN-LAST:event_mnuGruposActionPerformed
 
 private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
@@ -289,17 +290,17 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
     private javax.swing.JMenuItem mnuInformes;
     // End of variables declaration//GEN-END:variables
     
-    /*public void mostrarGrupos()
+    void mostrarGrupos()
     {
         if(GestorVentanas.isContactosAbierta())
         {
-            this.contactos.mostrarGrupos();
+            this.vContactos.mostrarGrupos();
         }
         if(GestorVentanas.isInformesAbierta())
         {
 //            this.informes.cargarGrupos();
         }
-    }*/
+    }
 
     /*void mostrarContactos() {
         if(GestorVentanas.isGruposAbierta())
@@ -333,7 +334,6 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     }else
                     {
                         this.setVisible(true);
-                        //dlgInicioSesion.setVisible(false);
                         this.dlgInicioSesion.dispose();
                     }
                     break;
@@ -345,7 +345,6 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     }else
                     {
                         this.setVisible(true);
-                        //dlgInicioSesion.setVisible(false);
                         this.dlgInicioSesion.dispose();
                     }
                     break;
@@ -377,7 +376,7 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     {
                         try {
                             Thread.sleep(100); // Sino lanza un NullPointerException
-                            this.contactos.actualizarMdlContactos(comE.getContactos());
+                            this.vContactos.actualizarMdlContactos(comE.getContactos());
                         } catch (InterruptedException ex) {
                             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -399,6 +398,34 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     } else
                     {
                         JOptionPane.showMessageDialog(this, "Contacto modificado");
+                    }
+                    break;
+                case CodigoMetodo.LISTAR_GRUPOS:
+                    if(!comE.getGrupos().isEmpty())
+                    {
+                        try {
+                            Thread.sleep(100);
+                            this.vGrupos.actualizarMdlGrupos(comE.getGrupos());
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+                case CodigoMetodo.INSERTAR_GRUPO:
+                    switch(comE.getResultado())
+                    {
+                        case -2:
+                            JOptionPane.showMessageDialog(this, "No existe ningún usuario con ese alias");
+                            break;
+                        case -1:
+                            JOptionPane.showMessageDialog(this, "El grupo no pudo ser creado");
+                            break;
+                        case 0:
+                            JOptionPane.showMessageDialog(this, "Grupo creado");
+                            //this.vGrupos.actualizarMdlGrupos(comE.getGrupos());
+                            break;
+                        default:
+                            break;
                     }
                     break;
                 default:
@@ -507,6 +534,25 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
         try {
             this.objFlujoS.writeObject(CodigoMetodo.MODIFICAR_CONTACTO);
             this.objFlujoS.writeObject(c);
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void actualizarGrupos() {
+        try {
+            this.objFlujoS.writeObject(CodigoMetodo.LISTAR_GRUPOS);
+            this.objFlujoS.writeObject(this.login.getAlias());
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void guardarGrupo(Grupo grupo) {
+        try {
+            this.objFlujoS.writeObject(CodigoMetodo.INSERTAR_GRUPO);
+            grupo.setAliasPropietario(this.login.getAlias());
+            this.objFlujoS.writeObject(grupo);
         } catch (IOException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
