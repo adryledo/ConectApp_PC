@@ -46,6 +46,11 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
         }
     }
 
+/*    int getSelectedGroupId()
+    {
+        return this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex()).getId();
+    }
+*/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -215,18 +220,30 @@ private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
     else
     {
-        //this.principal.modificarGrupo(new Grupo(this.txtNombre.getText()));
+        Grupo g = this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex());
+        g.setNombre(this.txtNombre.getText());
+        this.principal.modificarGrupo(g);
     }
-    /*Grupo g = new Grupo(this.txtNombre.getText());
-    EjecutarMetodoServ insGrupo = new EjecutarMetodoServ(CodigoMetodo.INSERTAR_GRUPO, g);
-    Thread t = new Thread(insGrupo);
-    t.start();*/
-    this.principal.actualizarGrupos();
-    this.limpiarCampos();
+    //this.limpiarCampos();
 }//GEN-LAST:event_btnGuardarActionPerformed
 
 private void lstGruposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstGruposMouseClicked
-    mostrarContactos();
+    int seleccionado;
+    
+    if(evt.getClickCount() == 1)
+    {
+        this.lstGrupos.clearSelection();
+        this.limpiarCampos();
+        return;
+    }
+    if((seleccionado=this.lstGrupos.getSelectedIndex()) == -1)
+    {
+        this.lstGrupos.clearSelection();
+        this.limpiarCampos();
+        return;
+    }
+    
+    this.principal.mostrarContactosGrupo(this.mdlGrupos.getElementAt(seleccionado).getId());
 }//GEN-LAST:event_lstGruposMouseClicked
 
 private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -235,12 +252,12 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         JOptionPane.showMessageDialog(this, "Seleccione un grupo");
         return;
     }
-    
-    /*Grupo g = this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex());
-    EjecutarMetodoServ elimGrupo = new EjecutarMetodoServ(CodigoMetodo.ELIMINAR_GRUPO, g);
-    Thread t = new Thread(elimGrupo);
-    t.start();*/
-    this.principal.actualizarGrupos();
+    if((!this.mdlContactos.isEmpty() && 
+            JOptionPane.showConfirmDialog(this, "Existen contactos pertenecientes a este grupo.\nEsta operación eliminará también sus contactos.\n¿Desea eliminarlo igualmente?") == 0)
+            || this.mdlContactos.isEmpty())
+    {
+        this.principal.eliminarGrupo(this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex()));
+    }
     this.limpiarCampos();
 }//GEN-LAST:event_btnEliminarActionPerformed
 
@@ -257,94 +274,34 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 
-    private void mostrarGrupos()
-    {
-        this.mdlGrupos.clear();
-        /*EjecutarMetodoServ listarGrupos = new EjecutarMetodoServ(CodigoMetodo.LISTAR_GRUPOS);
-        Thread t = new Thread(listarGrupos);
-        t.start();*/
-    }
-
     private void limpiarCampos()
     {
         this.txtNombre.setText(null);
-        this.lstGrupos.clearSelection();
-        this.lstContactos.clearSelection();
-    }
-    
-    public void mostrarContactos()
-    {
-        if(this.lstGrupos.isSelectionEmpty())
-        {
-            return;
-        }
-        
-        int idGrupo = this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex()).getId();
         this.mdlContactos.clear();
-        /*EjecutarMetodoServ listarContGrupo = new EjecutarMetodoServ(CodigoMetodo.LISTAR_CONTACTOS_GRUPO, idGrupo);
-        Thread t = new Thread(listarContGrupo);
-        t.start();*/
     }
 
-    protected void actualizarMdlGrupos(ArrayList grupos)
+    void actualizarMdlGrupos(ArrayList grupos)
     {
         this.mdlGrupos.clear();
-        grupos.stream().forEach((g) -> {
-            this.mdlGrupos.addElement((Grupo)g);
-        });
+        this.limpiarCampos();
+        if(!grupos.isEmpty())
+        {
+            grupos.stream().forEach((g) -> {
+                this.mdlGrupos.addElement((Grupo)g);
+            });
+        }
         this.lstGrupos.repaint();
     }
-    /*@Override
-    public void update(Subject subject) {
-        if(subject instanceof RecibirMetodoServ)
+
+    void actualizarMdlContactos(ArrayList<Contacto> contactos) {
+        this.mdlContactos.clear();
+        this.limpiarCampos();
+        if(!contactos.isEmpty())
         {
-            RecibirMetodoServ metodo = (RecibirMetodoServ) subject;
-            int codMetodo = metodo.getCodigo();
-            switch(codMetodo)
-            {
-                case CodigoMetodo.INSERTAR_GRUPO:
-                    switch(metodo.getResultado())
-                    {
-                        case 0:
-                            JOptionPane.showMessageDialog(this, "Grupo insertado");
-                            mostrarGrupos();
-                            break;
-                        case -1:
-                            JOptionPane.showMessageDialog(this, "Fallo al insertar el grupo");
-                            break;
-                    }
-                break;
-                case CodigoMetodo.ELIMINAR_GRUPO:
-                    switch(metodo.getResultado())
-                    {
-                        case 0:
-                            JOptionPane.showMessageDialog(this, "Grupo eliminado");
-                            mostrarGrupos();
-                            break;
-                        case -1:
-                            JOptionPane.showMessageDialog(this, "No se pudo eliminar el grupo");
-                            break;
-                    }
-                break;
-                case CodigoMetodo.LISTAR_GRUPOS:
-                    ArrayList<Object> grupos = metodo.getLista();
-                    for(Object grupo : grupos)
-                    {
-                        this.mdlGrupos.addElement((Grupo)grupo);
-                    }
-                    this.lstGrupos.repaint();
-                    limpiarCampos();
-                    this.principal.mostrarGrupos();
-                break;
-                case CodigoMetodo.LISTAR_CONTACTOS_GRUPO:
-                    ArrayList<Object> contactos = metodo.getLista();
-                    for(Object c : contactos)
-                    {
-                        this.mdlContactos.addElement((Contacto)c);
-                    }
-                    this.lstContactos.repaint();
-                break;
-            }
+            contactos.stream().forEach((c) -> {
+                this.mdlContactos.addElement(c);
+            });
         }
-    }*/
+        this.lstContactos.repaint();
+    }
 }

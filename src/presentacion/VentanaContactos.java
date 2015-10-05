@@ -37,7 +37,8 @@ public class VentanaContactos extends javax.swing.JInternalFrame{
         this.mdlContactos = new DefaultListModel<>();
         this.lstContactos.setModel(mdlContactos);
         this.principal.actualizarContactos();
-        this.limpiarCampos();
+        this.principal.actualizarGrupos();
+        //this.limpiarCampos();
         
         java.net.URL helpURL = this.getClass().getResource("/ayudas/ayuda.hs");
         try {
@@ -292,6 +293,11 @@ private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         JOptionPane.showMessageDialog(this, "Introduzca un nombre");
         return;
     }
+    if(this.cmbGrupo.getSelectedIndex() == -1)
+    {
+        JOptionPane.showMessageDialog(this, "Seleccione un grupo");
+        return;
+    }
     
     Contacto c = new Contacto();
     c.setAliasContacto(this.txtAlias.getText());
@@ -309,10 +315,10 @@ private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
     else
     {
-        this.principal.modificarContacto(c);
+        this.principal.modificarContacto(c, this.mdlContactos.getElementAt(this.lstContactos.getSelectedIndex()).getIdGrupo());
     }
     this.principal.actualizarContactos();
-    this.limpiarCampos();
+    //this.limpiarCampos();
 }//GEN-LAST:event_btnGuardarActionPerformed
 
 private void lstContactosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstContactosMouseClicked
@@ -358,7 +364,7 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }
     
     this.principal.eliminarContacto((Contacto)this.lstContactos.getSelectedValue());
-    this.limpiarCampos();
+    //this.limpiarCampos();
     this.principal.actualizarContactos();
 }//GEN-LAST:event_btnEliminarActionPerformed
 
@@ -381,22 +387,12 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 
-    public void mostrarGrupos()
-    {
-        this.mdlGrupos.removeAllElements();
-        /*EjecutarMetodoServ listarGrupos = new EjecutarMetodoServ(CodigoMetodo.LISTAR_GRUPOS);
-        this.t = new Thread(listarGrupos);
-        this.t.start();*/
-    }
-
     private void limpiarCampos() {
         this.txtAlias.setText(null);
         this.txtNombre.setText(null);
         this.txtDireccion.setText(null);
         this.txtTelefono.setText(null);
         this.txtEmail.setText(null);
-        mostrarGrupos();
-        //mostrarContactos();
         this.cmbGrupo.setSelectedIndex(-1);
         this.lstContactos.clearSelection();
         this.txtAlias.setEnabled(true);
@@ -405,9 +401,24 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     protected void actualizarMdlContactos(ArrayList contactos)
     {
         this.mdlContactos.clear();
-        contactos.stream().forEach((c) -> {
-            this.mdlContactos.addElement((Contacto)c);
-        });
+        this.limpiarCampos();
+        if(!contactos.isEmpty())
+        {
+            contactos.stream().forEach((c) -> {
+                this.mdlContactos.addElement((Contacto)c);
+            });
+        }
         this.lstContactos.repaint();
+    }
+
+    void actualizarMdlGrupos(ArrayList<Grupo> grupos) {
+        this.mdlGrupos.removeAllElements();
+        this.limpiarCampos();
+        if(!grupos.isEmpty())
+        {
+            grupos.stream().forEach((g) -> {
+                this.mdlGrupos.addElement((Grupo) g);
+            });
+        }
     }
 }
