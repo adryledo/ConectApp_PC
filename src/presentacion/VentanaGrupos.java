@@ -2,12 +2,14 @@ package presentacion;
 
 import clases.Contacto;
 import clases.Grupo;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
 import javax.help.HelpSetException;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
@@ -24,16 +26,20 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
 {
     private VentanaPrincipal principal;
     private DefaultListModel<Grupo> mdlGrupos;
-    private DefaultListModel<Contacto> mdlContactos;
+    private DefaultListModel<Contacto> mdlContactosGrupo;
+    private DefaultComboBoxModel<Contacto> mdlContactosUsuario;
     
     VentanaGrupos(VentanaPrincipal principal) {
         initComponents();
         this.principal = principal;
         this.mdlGrupos = new DefaultListModel<>();
-        this.mdlContactos = new DefaultListModel<>();
+        this.mdlContactosGrupo = new DefaultListModel<>();
+        this.mdlContactosUsuario = new DefaultComboBoxModel<>();
         this.lstGrupos.setModel(this.mdlGrupos);
-        this.lstContactos.setModel(mdlContactos);
+        this.lstContactos.setModel(mdlContactosGrupo);
+        this.cmbContactosUsuario.setModel(mdlContactosUsuario);
         this.principal.actualizarGrupos();
+        this.principal.actualizarContactos();
         this.limpiarCampos();
         
         java.net.URL helpURL = this.getClass().getResource("/ayudas/ayuda.hs");
@@ -71,11 +77,14 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnEliminar = new javax.swing.JButton();
+        cmbContactosUsuario = new javax.swing.JComboBox();
+        btnAnhadirContacto = new javax.swing.JButton();
+        btnExpulsarContacto = new javax.swing.JButton();
 
         setClosable(true);
         setResizable(true);
         setTitle("Grupos");
-        setPreferredSize(new java.awt.Dimension(300, 300));
+        setPreferredSize(new java.awt.Dimension(350, 300));
         try {
             setSelected(true);
         } catch (java.beans.PropertyVetoException e1) {
@@ -110,6 +119,11 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
         getContentPane().add(jLabel1, gridBagConstraints);
 
         txtNombre.setText("jTextField1");
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtNombreKeyPressed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -137,6 +151,7 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        lstGrupos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         lstGrupos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lstGruposMouseClicked(evt);
@@ -148,6 +163,7 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
@@ -160,16 +176,18 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        lstContactos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(lstContactos);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 10);
         getContentPane().add(jScrollPane2, gridBagConstraints);
 
         jLabel2.setText("Grupos");
@@ -196,9 +214,48 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
         getContentPane().add(btnEliminar, gridBagConstraints);
+
+        cmbContactosUsuario.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
+        getContentPane().add(cmbContactosUsuario, gridBagConstraints);
+
+        btnAnhadirContacto.setText("Añadir");
+        btnAnhadirContacto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnhadirContactoActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 10);
+        getContentPane().add(btnAnhadirContacto, gridBagConstraints);
+
+        btnExpulsarContacto.setText("Expulsar Contacto");
+        btnExpulsarContacto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExpulsarContactoActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.weightx = 2.0;
+        gridBagConstraints.weighty = 1.0;
+        getContentPane().add(btnExpulsarContacto, gridBagConstraints);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -244,7 +301,7 @@ private void lstGruposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         return;
     }
     
-    //this.principal.mostrarContactosGrupo(this.mdlGrupos.getElementAt(seleccionado).getAdmin());
+    this.principal.mostrarContactosGrupo(this.mdlGrupos.getElementAt(seleccionado));
 }//GEN-LAST:event_lstGruposMouseClicked
 
 private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -253,18 +310,49 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         JOptionPane.showMessageDialog(this, "Seleccione un grupo");
         return;
     }
-    if((!this.mdlContactos.isEmpty() && 
+    if((!this.mdlContactosGrupo.isEmpty() && 
             JOptionPane.showConfirmDialog(this, "Existen contactos pertenecientes a este grupo.\nEsta operación eliminará también sus contactos.\n¿Desea eliminarlo igualmente?") == 0)
-            || this.mdlContactos.isEmpty())
+            || this.mdlContactosGrupo.isEmpty())
     {
-        this.principal.eliminarGrupo(this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex()));
+        -->this.principal.eliminarGrupo(this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex()));
     }
     this.limpiarCampos();
 }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void btnAnhadirContactoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnhadirContactoActionPerformed
+        if(this.cmbContactosUsuario.getSelectedIndex() == -1)
+        {
+            JOptionPane.showMessageDialog(this, "Seleccione un contacto");
+            return;
+        }
+        if(this.lstGrupos.isSelectionEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Seleccione un grupo");
+            return;
+        }
+        Grupo grupo = this.mdlGrupos.elementAt(this.lstGrupos.getSelectedIndex());
+        Contacto contacto = this.mdlContactosUsuario.getElementAt(this.cmbContactosUsuario.getSelectedIndex());
+        this.principal.insertarGrupoContacto(grupo, contacto);
+    //    this.limpiarCampos();
+    }//GEN-LAST:event_btnAnhadirContactoActionPerformed
+
+    private void txtNombreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER)
+        {
+            this.btnGuardar.doClick();
+        }
+    }//GEN-LAST:event_txtNombreKeyPressed
+
+    private void btnExpulsarContactoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExpulsarContactoActionPerformed
+        -->
+    }//GEN-LAST:event_btnExpulsarContactoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAnhadirContacto;
     private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnExpulsarContacto;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JComboBox cmbContactosUsuario;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -278,14 +366,14 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private void limpiarCampos()
     {
         this.txtNombre.setText(null);
-        this.mdlContactos.clear();
+        this.mdlContactosGrupo.clear();
     }
 
     void actualizarMdlGrupos(ArrayList grupos)
     {
         this.mdlGrupos.clear();
         this.limpiarCampos();
-        if(!grupos.isEmpty())
+        if(grupos != null && !grupos.isEmpty())
         {
             grupos.stream().forEach((g) -> {
                 this.mdlGrupos.addElement((Grupo)g);
@@ -294,15 +382,27 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.lstGrupos.repaint();
     }
 
-    void actualizarMdlContactos(ArrayList<Contacto> contactos) {
-        this.mdlContactos.clear();
+    void actualizarMdlContactosGrupo(ArrayList<Contacto> contactos) {
+        this.mdlContactosGrupo.clear();
         this.limpiarCampos();
-        if(!contactos.isEmpty())
+        if(contactos != null && !contactos.isEmpty())
         {
-            contactos.stream().forEach((c) -> {
-                this.mdlContactos.addElement(c);
+            contactos.stream().forEach((Contacto c) -> {
+                this.mdlContactosGrupo.addElement(c);
             });
         }
         this.lstContactos.repaint();
+    }
+    
+    void actualizarMdlContactosUsuario(ArrayList<Contacto> contactos)
+    {
+        this.mdlContactosUsuario.removeAllElements();
+        this.limpiarCampos();
+        if(contactos != null && !contactos.isEmpty())
+        {
+            contactos.stream().forEach((Contacto c) -> {
+                this.mdlContactosUsuario.addElement(c);
+            });
+        }
     }
 }

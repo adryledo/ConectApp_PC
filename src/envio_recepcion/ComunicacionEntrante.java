@@ -21,7 +21,6 @@ import clases.CodigoMetodo;
 import clases.Contacto;
 import clases.EnvioPrivado;
 import clases.Grupo;
-import clases.Mensaje;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -45,9 +44,14 @@ public class ComunicacionEntrante extends Subject implements Runnable
     private ArrayList<Grupo> grupos;
     private final Socket socket;
     private EnvioPrivado envioPrivado;
+    private Grupo grupo;
 
     public ComunicacionEntrante(Socket socket) {
         this.socket = socket;
+    }
+
+    public Grupo getGrupo() {
+        return grupo;
     }
 
     public EnvioPrivado getEnvioPrivado() {
@@ -91,7 +95,7 @@ public class ComunicacionEntrante extends Subject implements Runnable
                         System.out.println("ComunicacionEntrante: Resultado leído de flujo");
                         this.notifyObservers();
                         break;
-                    case CodigoMetodo.LISTAR_CONTACTOS:
+                    case CodigoMetodo.LISTAR_CONTACTOS_USUARIO:
                         this.contactos = (ArrayList<Contacto>) objFlujoE.readObject();
                         this.notifyObservers();
                         break;
@@ -129,6 +133,11 @@ public class ComunicacionEntrante extends Subject implements Runnable
                         break;
                     case CodigoMetodo.RECIBIR_MENSAJE_P:
                         this.envioPrivado = (EnvioPrivado) objFlujoE.readObject();
+                        this.notifyObservers();
+                        break;
+                    case CodigoMetodo.INSERTAR_GRUPO_CONTACTO:
+                        this.resultado = (int) objFlujoE.readObject();
+                        this.grupo = (Grupo) objFlujoE.readObject();
                         this.notifyObservers();
                         break;
                     default:

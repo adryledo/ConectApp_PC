@@ -17,7 +17,6 @@
 
 package presentacion;
 
-import clases.Contacto;
 import clases.EnvioPrivado;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -27,7 +26,6 @@ import javax.help.HelpBroker;
 import javax.help.HelpSet;
 import javax.help.HelpSetException;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 /**
  *

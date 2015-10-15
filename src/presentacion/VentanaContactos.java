@@ -450,7 +450,7 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     {
         this.mdlContactos.clear();
         this.limpiarCampos();
-        if(!contactos.isEmpty())
+        if(contactos != null && !contactos.isEmpty())
         {
             contactos.stream().forEach((c) -> {
                 this.mdlContactos.addElement((Contacto)c);
@@ -462,7 +462,7 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     void actualizarMdlGrupos(ArrayList<Grupo> grupos) {
         this.mdlGrupos.removeAllElements();
         this.limpiarCampos();
-        if(!grupos.isEmpty())
+        if(grupos != null && !grupos.isEmpty())
         {
             grupos.stream().forEach((g) -> {
                 this.mdlGrupos.addElement((Grupo) g);
