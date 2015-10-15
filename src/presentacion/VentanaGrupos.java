@@ -221,8 +221,9 @@ private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     else
     {
         Grupo g = this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex());
+        String nombreActual = g.getNombre();
         g.setNombre(this.txtNombre.getText());
-        this.principal.modificarGrupo(g);
+        this.principal.modificarGrupo(g, nombreActual);
     }
     //this.limpiarCampos();
 }//GEN-LAST:event_btnGuardarActionPerformed
@@ -243,7 +244,7 @@ private void lstGruposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
         return;
     }
     
-    this.principal.mostrarContactosGrupo(this.mdlGrupos.getElementAt(seleccionado).getId());
+    //this.principal.mostrarContactosGrupo(this.mdlGrupos.getElementAt(seleccionado).getAdmin());
 }//GEN-LAST:event_lstGruposMouseClicked
 
 private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed

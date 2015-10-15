@@ -13,33 +13,47 @@ public class GestorVentanas
     private static boolean contactosAbierta = false;
     private static boolean gruposAbierta = false;
     private static boolean informesAbierta = false;
+    private static boolean selContactoAbierta = false;
+//    private static ArrayList<VentanaConver> arrayConversaciones = new ArrayList<>();
 
-    public static boolean isGruposAbierta() {
+    static boolean isGruposAbierta() {
         return gruposAbierta;
     }
 
-    public static void setGruposAbierta(boolean gruposAbierta) {
+    static void setGruposAbierta(boolean gruposAbierta) {
         GestorVentanas.gruposAbierta = gruposAbierta;
     }
 
-    public static boolean isInformesAbierta() {
+    static boolean isInformesAbierta() {
         return informesAbierta;
     }
 
-    public static void setInformesAbierta(boolean informesAbierta) {
+    static void setInformesAbierta(boolean informesAbierta) {
         GestorVentanas.informesAbierta = informesAbierta;
     }
     
-    public static boolean isContactosAbierta() {
+    static boolean isContactosAbierta() {
         return contactosAbierta;
     }
     
-    public static void setContactosAbierta(boolean contactos)
+    static void setContactosAbierta(boolean contactos)
     {
         GestorVentanas.contactosAbierta = contactos;
     }
 
-    /*public static VentanaConver recuperarVentanaConver(VentanaPrincipal principal, 
+    static boolean isSelContactoAbierta() {
+        return selContactoAbierta;
+    }
+
+    static void setSelContactoAbierta(boolean selContactoAbierta) {
+        GestorVentanas.selContactoAbierta = selContactoAbierta;
+    }
+    
+/*    static void addVentanaConver(VentanaConver vc) {
+        GestorVentanas.arrayConversaciones.add(vc);
+    }*/
+    
+/*    static VentanaConver recuperarVentanaConver(VentanaPrincipal principal, 
             Contacto contacto) {
         VentanaConver v;
         for(Object o : principal.getEscritorio().getAllFrames())
@@ -53,15 +67,15 @@ public class GestorVentanas
                 }
             }
         }
-       /* Contacto c = null;
+        /*Contacto c = null;
         if((c = EjecutarMetodoServ.recuperarContacto(contacto)) == null)
         {
             c = new Contacto();
             c.setIp(host);
             c.setNombre(host);
-        }*/
+        }
         
-    /*    v = new VentanaConver(principal, contacto);
+        v = new VentanaConver(principal, contacto);
         principal.getEscritorio().add(v);
         return v;
     }*/
