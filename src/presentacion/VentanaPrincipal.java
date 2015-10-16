@@ -21,6 +21,7 @@ import clases.CodigoMetodo;
 import clases.Contacto;
 import clases.EnvioPrivado;
 import clases.Grupo;
+import clases.GrupoContacto;
 import clases.Usuario;
 import envio_recepcion.ComunicacionEntrante;
 import envio_recepcion.Observer;
@@ -321,10 +322,10 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
         {
             this.vGrupos.actualizarMdlGrupos(grupos);
         }
-        if(GestorVentanas.isContactosAbierta())
+    /*    if(GestorVentanas.isContactosAbierta())
         {
             this.vContactos.actualizarMdlGrupos(grupos);
-        }
+        }*/
         if(GestorVentanas.isInformesAbierta())
         {
 //            this.informes.cargarGrupos();
@@ -563,6 +564,26 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     {
                         JOptionPane.showMessageDialog(this, "Contacto añadido al grupo");
                         this.mostrarContactosGrupo(comE.getGrupo());
+                        this.mostrarGruposContacto(comE.getContacto());
+                    }
+                    break;
+                case CodigoMetodo.ELIMINAR_GRUPO_CONTACTO:
+                    if(comE.getResultado() != 0)
+                    {
+                        JOptionPane.showMessageDialog(this, "No se ha podido eliminar el contacto del grupo");
+                    }else
+                    {
+                        JOptionPane.showMessageDialog(this, "Contacto expulsado del grupo");
+                        this.mostrarContactosGrupo(comE.getGrupo());
+                        this.mostrarGruposContacto(comE.getContacto());
+                    }
+                    break;
+                case CodigoMetodo.LISTAR_GRUPOS_CONTACTO:
+                    try {
+                        Thread.sleep(100);
+                        this.vContactos.actualizarMdlGrupos(comE.getGrupos());
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
                 default:
@@ -715,11 +736,11 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
         }
     }
 
-    void modificarGrupo(Grupo grupo, String nombreActual) {
+    void modificarGrupo(Grupo grupo, String nuevoNombre) {
         try {
             this.objFlujoS.writeObject(CodigoMetodo.MODIFICAR_GRUPO);
             this.objFlujoS.writeObject(grupo);
-            this.objFlujoS.writeObject(nombreActual);
+            this.objFlujoS.writeObject(nuevoNombre);
         } catch (IOException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -745,6 +766,25 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
             this.objFlujoS.writeObject(CodigoMetodo.INSERTAR_GRUPO_CONTACTO);
             this.objFlujoS.writeObject(grupo);
             this.objFlujoS.writeObject(contacto);
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void expulsarContactoDeGrupo(Grupo g, Contacto c) {
+        try {
+            this.objFlujoS.writeObject(CodigoMetodo.ELIMINAR_GRUPO_CONTACTO);
+            this.objFlujoS.writeObject(g);
+            this.objFlujoS.writeObject(c);
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void mostrarGruposContacto(Contacto c) {
+        try {
+            this.objFlujoS.writeObject(CodigoMetodo.LISTAR_GRUPOS_CONTACTO);
+            this.objFlujoS.writeObject(c);
         } catch (IOException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }

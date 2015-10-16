@@ -278,9 +278,8 @@ private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     else
     {
         Grupo g = this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex());
-        String nombreActual = g.getNombre();
-        g.setNombre(this.txtNombre.getText());
-        this.principal.modificarGrupo(g, nombreActual);
+        String nuevoNombre = this.txtNombre.getText();
+        this.principal.modificarGrupo(g, nuevoNombre);
     }
     //this.limpiarCampos();
 }//GEN-LAST:event_btnGuardarActionPerformed
@@ -311,10 +310,10 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         return;
     }
     if((!this.mdlContactosGrupo.isEmpty() && 
-            JOptionPane.showConfirmDialog(this, "Existen contactos pertenecientes a este grupo.\nEsta operación eliminará también sus contactos.\n¿Desea eliminarlo igualmente?") == 0)
+            JOptionPane.showConfirmDialog(this, "Existen contactos pertenecientes a este grupo.\n¿Desea eliminarlo igualmente?") == 0)
             || this.mdlContactosGrupo.isEmpty())
     {
-        -->this.principal.eliminarGrupo(this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex()));
+        this.principal.eliminarGrupo(this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex()));
     }
     this.limpiarCampos();
 }//GEN-LAST:event_btnEliminarActionPerformed
@@ -344,7 +343,21 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }//GEN-LAST:event_txtNombreKeyPressed
 
     private void btnExpulsarContactoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExpulsarContactoActionPerformed
-        -->
+        if(this.lstContactos.isSelectionEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Seleccione un contacto");
+            return;
+        }
+        
+        if(this.lstGrupos.isSelectionEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Seleccione un grupo");
+            return;
+        }
+        
+        Grupo g = this.mdlGrupos.elementAt(this.lstGrupos.getSelectedIndex());
+        Contacto c = this.mdlContactosGrupo.elementAt(this.lstContactos.getSelectedIndex());
+        this.principal.expulsarContactoDeGrupo(g, c);
     }//GEN-LAST:event_btnExpulsarContactoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

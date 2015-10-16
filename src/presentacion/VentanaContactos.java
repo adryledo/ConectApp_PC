@@ -43,7 +43,7 @@ import javax.swing.JOptionPane;
 public class VentanaContactos extends javax.swing.JInternalFrame{
 
     private VentanaPrincipal principal;
-    private DefaultComboBoxModel<Grupo> mdlGrupos;
+    private DefaultListModel<Grupo> mdlGruposContacto;
     private DefaultListModel<Contacto> mdlContactos;
     private ArrayList<Grupo> arrayGruposContacto;
     
@@ -51,13 +51,12 @@ public class VentanaContactos extends javax.swing.JInternalFrame{
         initComponents();
         this.principal = principal;
         this.arrayGruposContacto = new ArrayList<>();
-        this.mdlGrupos = new DefaultComboBoxModel<>();
-        this.cmbGrupo.setModel(mdlGrupos);
-        this.lstGrupos.setModel(mdlGrupos);
+        this.mdlGruposContacto = new DefaultListModel<>();
+        this.lstGrupos.setModel(mdlGruposContacto);
         this.mdlContactos = new DefaultListModel<>();
         this.lstContactos.setModel(mdlContactos);
         this.principal.actualizarContactos();
-        this.principal.actualizarGrupos();
+    //    this.principal.actualizarGrupos();
         //this.limpiarCampos();
         
         java.net.URL helpURL = this.getClass().getResource("/ayudas/ayuda.hs");
@@ -89,7 +88,6 @@ public class VentanaContactos extends javax.swing.JInternalFrame{
         txtTelefono = new javax.swing.JTextField();
         txtDireccion = new javax.swing.JTextField();
         txtEmail = new javax.swing.JTextField();
-        cmbGrupo = new javax.swing.JComboBox();
         btnGuardar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstContactos = new javax.swing.JList();
@@ -102,7 +100,8 @@ public class VentanaContactos extends javax.swing.JInternalFrame{
         setClosable(true);
         setResizable(true);
         setTitle("Contactos");
-        setPreferredSize(new java.awt.Dimension(400, 300));
+        setMinimumSize(new java.awt.Dimension(90, 50));
+        setPreferredSize(new java.awt.Dimension(400, 350));
         try {
             setSelected(true);
         } catch (java.beans.PropertyVetoException e1) {
@@ -160,7 +159,7 @@ public class VentanaContactos extends javax.swing.JInternalFrame{
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         getContentPane().add(jLabel4, gridBagConstraints);
 
-        jLabel5.setText("Grupo");
+        jLabel5.setText("Grupos");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
@@ -215,16 +214,6 @@ public class VentanaContactos extends javax.swing.JInternalFrame{
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         getContentPane().add(txtEmail, gridBagConstraints);
 
-        cmbGrupo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
-        getContentPane().add(cmbGrupo, gridBagConstraints);
-
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -233,7 +222,7 @@ public class VentanaContactos extends javax.swing.JInternalFrame{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
         getContentPane().add(btnGuardar, gridBagConstraints);
 
@@ -253,7 +242,7 @@ public class VentanaContactos extends javax.swing.JInternalFrame{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 6;
+        gridBagConstraints.gridheight = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
@@ -269,7 +258,7 @@ public class VentanaContactos extends javax.swing.JInternalFrame{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         getContentPane().add(btnEliminar, gridBagConstraints);
 
@@ -298,19 +287,25 @@ public class VentanaContactos extends javax.swing.JInternalFrame{
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         getContentPane().add(txtAlias, gridBagConstraints);
 
+        jScrollPane2.setMinimumSize(new java.awt.Dimension(40, 80));
+
         lstGrupos.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        lstGrupos.setMaximumSize(new java.awt.Dimension(100, 80));
+        lstGrupos.setMinimumSize(new java.awt.Dimension(40, 80));
+        lstGrupos.setPreferredSize(new java.awt.Dimension(80, 80));
         jScrollPane2.setViewportView(lstGrupos);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.5;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         getContentPane().add(jScrollPane2, gridBagConstraints);
 
@@ -383,6 +378,8 @@ private void lstContactosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRS
     this.txtDireccion.setText(c.getDireccion());
     this.txtTelefono.setText(c.getTelefono());
     this.txtEmail.setText(c.getEmail());
+    
+    this.principal.mostrarGruposContacto(c);
     // mostrar en la lista los grupos a los que pertenece
 /*    for(int i=0; i<this.mdlGrupos.getSize(); i++)
     {
@@ -412,7 +409,6 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JComboBox cmbGrupo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -436,7 +432,7 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.txtDireccion.setText(null);
         this.txtTelefono.setText(null);
         this.txtEmail.setText(null);
-        this.cmbGrupo.setSelectedIndex(-1);
+        this.mdlGruposContacto.removeAllElements();
         this.lstContactos.clearSelection();
         this.txtAlias.setEnabled(true);
     }
@@ -460,12 +456,12 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }
 
     void actualizarMdlGrupos(ArrayList<Grupo> grupos) {
-        this.mdlGrupos.removeAllElements();
-        this.limpiarCampos();
+        this.mdlGruposContacto.removeAllElements();
+    //    this.limpiarCampos();
         if(grupos != null && !grupos.isEmpty())
         {
             grupos.stream().forEach((g) -> {
-                this.mdlGrupos.addElement((Grupo) g);
+                this.mdlGruposContacto.addElement((Grupo) g);
             });
         }
     }

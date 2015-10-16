@@ -45,11 +45,16 @@ public class ComunicacionEntrante extends Subject implements Runnable
     private final Socket socket;
     private EnvioPrivado envioPrivado;
     private Grupo grupo;
+    private Contacto contacto;
 
     public ComunicacionEntrante(Socket socket) {
         this.socket = socket;
     }
 
+    public Contacto getContacto() {
+        return contacto;
+    }
+    
     public Grupo getGrupo() {
         return grupo;
     }
@@ -138,6 +143,17 @@ public class ComunicacionEntrante extends Subject implements Runnable
                     case CodigoMetodo.INSERTAR_GRUPO_CONTACTO:
                         this.resultado = (int) objFlujoE.readObject();
                         this.grupo = (Grupo) objFlujoE.readObject();
+                        this.contacto = (Contacto) objFlujoE.readObject();
+                        this.notifyObservers();
+                        break;
+                    case CodigoMetodo.ELIMINAR_GRUPO_CONTACTO:
+                        this.resultado = (int) objFlujoE.readObject();
+                        this.grupo = (Grupo) objFlujoE.readObject();
+                        this.contacto = (Contacto) objFlujoE.readObject();
+                        this.notifyObservers();
+                        break;
+                    case CodigoMetodo.LISTAR_GRUPOS_CONTACTO:
+                        this.grupos = (ArrayList<Grupo>) objFlujoE.readObject();
                         this.notifyObservers();
                         break;
                     default:
@@ -161,5 +177,4 @@ public class ComunicacionEntrante extends Subject implements Runnable
             }
         }*/
     }
-    
 }
