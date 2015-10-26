@@ -122,6 +122,6 @@ public class DialogRecibirArchivo extends javax.swing.JDialog {
     
     public void actualizaBarraProgreso(int n)
     {
-        this.jProgressBar1.setValue(n);
+        this.jProgressBar1.setValue(this.jProgressBar1.getMaximum()-n);
     }
 }

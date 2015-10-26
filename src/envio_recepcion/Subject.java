@@ -25,11 +25,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Subject
 {
-    private CopyOnWriteArrayList<Observer> registeredObservers;
+    private final CopyOnWriteArrayList<Observer> registeredObservers;
 // Lo declaro como CopyOnWriteArrayList para evitar ConcurrentModificationException
 
     public Subject() {
-        this.registeredObservers = new CopyOnWriteArrayList<Observer>();
+        this.registeredObservers = new CopyOnWriteArrayList<>();
     }
 
     public void registerObserver(Observer observer) {

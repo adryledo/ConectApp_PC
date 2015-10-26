@@ -29,6 +29,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import presentacion.VentanaPrincipal;
 
 /**
@@ -66,6 +68,10 @@ public class EnvioArchivo extends Subject implements Runnable {
     //    this.aliasContacto = envPriv.getDestinatario();
         this.iniciado = false;
         this.enviado = false;
+    }
+
+    public EnvioPrivado getEnvPriv() {
+        return envPriv;
     }
 
     public int getNumIter() {
@@ -116,7 +122,7 @@ public class EnvioArchivo extends Subject implements Runnable {
             System.out.println("Tamaño de fichero enviado: "+this.tam);
             envioFich();
             System.out.println("Fichero enviado!!!");
-        //    fichEnviar.delete();
+            fichEnviar.delete();
             //socketEnviar.close();
         } catch (UnknownHostException e) {
             System.out.println("Referencia a host no resuelta");
@@ -131,7 +137,7 @@ public class EnvioArchivo extends Subject implements Runnable {
         int tamBuf = 256;
         byte buffer[] = new byte[tamBuf];
         int numBytesLeidos = 0;
-        FileInputStream ficheroOrigen;
+        FileInputStream ficheroOrigen = null;
         try {
             ficheroOrigen = new FileInputStream(this.nombreFich);
             this.numIter = (int) this.tam / tamBuf;
@@ -139,7 +145,7 @@ public class EnvioArchivo extends Subject implements Runnable {
                 this.numIter++;
             }
             this.iniciado = false;
-//            notifyObservers();
+            notifyObservers();
 //---- NOTIFICAR A LA VENTANA EL VALOR DE numIter PARA INICIAR LA BARRA DE PROGRESO ---
             try {
                 while (this.numIter > 0) {
@@ -147,7 +153,7 @@ public class EnvioArchivo extends Subject implements Runnable {
                     flujoDatos.write(buffer, 0, numBytesLeidos);
                     this.numIter--;
                     this.iniciado = true;
-//                    notifyObservers();
+                    notifyObservers();
 //---- NOTIFICAR A LA VENTANA EL VALOR 1 PARA ACTUALIZAR LA BARRA DE PROGRESO ---
                 }
             //    ficheroOrigen.close();
@@ -158,6 +164,13 @@ public class EnvioArchivo extends Subject implements Runnable {
             this.enviado = true;
             notifyObservers();
         } catch (FileNotFoundException e) {
+        } finally
+        {
+            try {
+                ficheroOrigen.close();
+            } catch (IOException ex) {
+                Logger.getLogger(EnvioArchivo.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

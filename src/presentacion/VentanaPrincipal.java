@@ -609,7 +609,7 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     {
                         JOptionPane.showMessageDialog(this, "Contacto añadido al grupo");
                         this.mostrarContactosGrupo(comE.getGrupo());
-                        this.mostrarGruposContacto(comE.getContacto());
+                    //    this.mostrarGruposContacto(comE.getContacto());
                     }
                     break;
                 case CodigoMetodo.ELIMINAR_GRUPO_CONTACTO:
@@ -620,7 +620,7 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     {
                         JOptionPane.showMessageDialog(this, "Contacto expulsado del grupo");
                         this.mostrarContactosGrupo(comE.getGrupo());
-                        this.mostrarGruposContacto(comE.getContacto());
+                    //    this.mostrarGruposContacto(comE.getContacto());
                     }
                     break;
                 case CodigoMetodo.LISTAR_GRUPOS_CONTACTO:
@@ -658,7 +658,7 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                 }
             } else {
                 int respuesta;
-                respuesta = JOptionPane.showConfirmDialog(null, "¿Guardar archivo?", "Archivo recibido",
+                respuesta = JOptionPane.showConfirmDialog(this, "¿Guardar archivo?", recArch.getAliasContacto()+" intenta enviarle "+recArch.getNombreArchivo(),
                 JOptionPane.YES_NO_OPTION);
                 if (respuesta == JOptionPane.YES_OPTION) {
                     recArch.setAceptacion(true);
@@ -671,6 +671,17 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
 //                else {
 //                    t.interrupt();
 //                }
+            }
+        } else if(subject instanceof EnvioArchivo)
+        {
+            EnvioArchivo envArch = (EnvioArchivo) subject;
+            VentanaConver vConver = this.recuperarVentanaConver(envArch.getEnvPriv().getDestinatario());
+            if(!envArch.isIniciado())
+            {
+                vConver.iniciaBarraProgreso(envArch.getNumIter());
+            } else
+            {
+                vConver.actualizaBarraProgreso(envArch.getNumIter());
             }
         }
     }

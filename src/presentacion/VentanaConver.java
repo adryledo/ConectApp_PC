@@ -294,6 +294,7 @@ private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     int resultado = jfcElegirArchivo.showOpenDialog(this);
     switch(resultado){
         case javax.swing.JFileChooser.CANCEL_OPTION:
+            this.limpiarPanelArchivo();
             break;
         case javax.swing.JFileChooser.APPROVE_OPTION: 
             this.rutaFichero = jfcElegirArchivo.getSelectedFile().getPath();
@@ -368,5 +369,11 @@ private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     public void recibirMensajeP(EnvioPrivado envP)
     {
         this.txtConversacion.append((this.nombre==null ? this.alias : this.nombre)+": "+envP.getContenido()+"\n");
+    }
+
+    private void limpiarPanelArchivo() {
+        this.txtArchivo.setText(null);
+        this.jProgressBar1.setMaximum(0);
+        this.rutaFichero = null;
     }
 }

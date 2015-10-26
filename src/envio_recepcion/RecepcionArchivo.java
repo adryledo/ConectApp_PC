@@ -134,6 +134,7 @@ public class RecepcionArchivo extends Subject implements Runnable {
                 }
                 ficheroDestino.close();
             } catch (IOException e) {
+                Logger.getLogger(RecepcionArchivo.class.getName()).log(Level.SEVERE, null, e);
             }
             
             desencriptar(nomCom);
@@ -141,6 +142,7 @@ public class RecepcionArchivo extends Subject implements Runnable {
             this.recibido = true;
             notifyObservers();
         } catch (FileNotFoundException e) {
+            Logger.getLogger(RecepcionArchivo.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -153,6 +155,9 @@ public class RecepcionArchivo extends Subject implements Runnable {
         int i;
         while(true)
         {
+            this.iniciado = false;
+            this.recibido = false;
+            this.aceptacion = false;
             try {
             //    socketServidor = new ServerSocket(62003);
             //    comunicaCliente = socketServidor.accept();
@@ -169,6 +174,7 @@ public class RecepcionArchivo extends Subject implements Runnable {
                 this.envPriv = (EnvioPrivado) this.flujoObjetos.readObject();
                 System.out.println("EnvioPrivado recibido");
                 this.nombreArchivo = this.envPriv.getContenido();
+                this.aliasContacto = this.envPriv.getRemitente();
                 notifyObservers();
                 while (!this.isAceptacion()) {
                     this.detener();
@@ -177,8 +183,7 @@ public class RecepcionArchivo extends Subject implements Runnable {
                 System.out.println("Fichero recibido!!!");
             //    comunicaCliente.close();
             //    socketServidor.close();
-            } catch (IOException | SecurityException e) {
-            } catch (ClassNotFoundException ex) {
+            } catch (IOException | SecurityException | ClassNotFoundException ex) {
                 Logger.getLogger(RecepcionArchivo.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -187,9 +192,9 @@ public class RecepcionArchivo extends Subject implements Runnable {
     private void desencriptar(String nomCom) {
         try
         {
-            File salida = new File(nomCom);
-            FileInputStream imageInFile2 = new FileInputStream(salida);
-            byte imageData2[] = new byte[(int) salida.length()];
+            File fichEntrada = new File(nomCom);
+            FileInputStream imageInFile2 = new FileInputStream(fichEntrada);
+            byte imageData2[] = new byte[(int) fichEntrada.length()];
             imageInFile2.read(imageData2);
 
             TestBouncy esource2 = new TestBouncy();
@@ -205,6 +210,7 @@ public class RecepcionArchivo extends Subject implements Runnable {
 
             imageInFile2.close();
             imageOutFile2.close();
+            fichEntrada.delete();
 
             System.out.println("File Successfully restored!");
         } catch (IOException ex) {
