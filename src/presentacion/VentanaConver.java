@@ -38,6 +38,7 @@ public class VentanaConver extends javax.swing.JInternalFrame {
 //    private Contacto contacto;
     private String alias;
     private String nombre;
+    private String rutaFichero;
     
 
     VentanaConver(VentanaPrincipal principal, String alias, String nombre) {
@@ -47,6 +48,7 @@ public class VentanaConver extends javax.swing.JInternalFrame {
         this.setTitle(nombre==null ? alias : nombre);
         this.alias = alias;
         this.nombre = nombre;
+        this.rutaFichero = null;
     //    this.contacto = c;
         
         java.net.URL helpURL = this.getClass().getResource("/ayudas/ayuda.hs");
@@ -271,11 +273,13 @@ private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
 }//GEN-LAST:event_formInternalFrameClosed
 
 private void btnEnviarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarArchivoActionPerformed
-/*    EnviarArchivo enviarArchivo = new EnviarArchivo(c, this.txtArchivo.getText());
+    /*EnvioArchivo enviarArchivo = new EnvioArchivo(c, this.txtArchivo.getText());
     jProgressBar1.setMaximum(0);
     thEnviarArchivo = new Thread(enviarArchivo);
     enviarArchivo.registerObserver(this);
     thEnviarArchivo.start();*/
+    this.jProgressBar1.setMaximum(0);
+    this.principal.enviarArchivo(this.rutaFichero, this.alias);
 }//GEN-LAST:event_btnEnviarArchivoActionPerformed
 
 private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -292,8 +296,8 @@ private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         case javax.swing.JFileChooser.CANCEL_OPTION:
             break;
         case javax.swing.JFileChooser.APPROVE_OPTION: 
-            File fichero = jfcElegirArchivo.getSelectedFile();
-            this.txtArchivo.setText(fichero.getPath());
+            this.rutaFichero = jfcElegirArchivo.getSelectedFile().getPath();
+            this.txtArchivo.setText(this.rutaFichero);
         break;
         case javax.swing.JFileChooser.ERROR_OPTION:
         break;

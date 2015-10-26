@@ -21,10 +21,11 @@ import clases.CodigoMetodo;
 import clases.Contacto;
 import clases.EnvioPrivado;
 import clases.Grupo;
-import clases.GrupoContacto;
 import clases.Usuario;
 import envio_recepcion.ComunicacionEntrante;
+import envio_recepcion.EnvioArchivo;
 import envio_recepcion.Observer;
+import envio_recepcion.RecepcionArchivo;
 import envio_recepcion.Subject;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -72,7 +74,16 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
     private Thread thComEntrante;
     private OutputStream flujoSalida;
     private ObjectOutputStream objFlujoS;
+    
+    private Socket socketArchivos;
+    private RecepcionArchivo recepcionArchivo;
+    private Thread thRecepcionArchivo;
+    private Thread thEnvioArch;
+    private OutputStream flujoSalidaArchivos;
+    private ObjectOutputStream objFlujoSalidaArchivos;
+    
     private Usuario login;
+    private DialogRecibirArchivo dlgRecepArch;
     
 //    private DialogRecibirArchivo dra;
     
@@ -90,6 +101,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
                 try
                 {
                     this.socket = new Socket(this.IP_SERVIDOR, 62006);
+                    this.socketArchivos = new Socket(this.IP_SERVIDOR, 62005);
                     break;
                 } catch(IOException e)
                 {
@@ -109,9 +121,16 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
             this.thComEntrante = new Thread(this.comEntrante);
             this.thComEntrante.start();
             
+            this.recepcionArchivo = new RecepcionArchivo(this.socketArchivos);
+            this.recepcionArchivo.registerObserver(this);
+            this.thRecepcionArchivo = new Thread(this.recepcionArchivo);
+            this.thRecepcionArchivo.start();
+            
             this.flujoSalida = this.socket.getOutputStream();
             this.objFlujoS = new ObjectOutputStream(this.flujoSalida);
-        
+            
+            this.flujoSalidaArchivos = this.socketArchivos.getOutputStream();
+            this.objFlujoSalidaArchivos = new ObjectOutputStream(flujoSalidaArchivos);
             this.dlgInicioSesion = new DialogIniciarSesion(this, true);
             this.dlgInicioSesion.setVisible(true);
         } catch (IOException | InterruptedException ex) {
@@ -132,6 +151,14 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
         } catch (HelpSetException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public OutputStream getFlujoSalidaArchivos() {
+        return flujoSalidaArchivos;
+    }
+
+    public ObjectOutputStream getObjFlujoSalidaArchivos() {
+        return objFlujoSalidaArchivos;
     }
 
 /*    public JDesktopPane getEscritorio() {
@@ -352,6 +379,12 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
             
     }
     
+    /**
+     * 
+     * @param alias
+     * @param nombre
+     * @return 
+     */
     public VentanaConver addConversacion(String alias, String nombre)
     {
         VentanaConver vc;
@@ -401,6 +434,12 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                         this.login = null;
                     }else
                     {
+                        try {
+                            objFlujoSalidaArchivos.writeObject(this.login);
+                        } catch (IOException ex) {
+                            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+        
                         this.setVisible(true);
                         this.dlgInicioSesion.dispose();
                     }
@@ -412,6 +451,12 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                         this.login = null;
                     }else
                     {
+                        try {
+                            objFlujoSalidaArchivos.writeObject(this.login);
+                        } catch (IOException ex) {
+                            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+        
                         this.setVisible(true);
                         this.dlgInicioSesion.dispose();
                     }
@@ -590,6 +635,44 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     break;
             }
         }
+        else if(subject instanceof RecepcionArchivo)
+        {
+            RecepcionArchivo recArch = (RecepcionArchivo) subject;
+            /*VentanaConver vConver = this.addConversacion(recArch.getAliasContacto(), null);
+            vConver.actualizaBarraProgreso(recArch.getNumIter());*/
+            
+            if (recArch.isAceptacion()) {
+                if(!recArch.isIniciado())
+                {
+                    this.dlgRecepArch.iniciaBarraProgreso(recArch.getNumIter());
+                }
+                else
+                {
+                    this.dlgRecepArch.actualizaBarraProgreso(recArch.getNumIter());
+                }
+
+                if(recArch.isRecibido())
+                {
+                    JOptionPane.showMessageDialog(this, "Archivo recibido");
+                    this.dlgRecepArch.dispose();
+                }
+            } else {
+                int respuesta;
+                respuesta = JOptionPane.showConfirmDialog(null, "¿Guardar archivo?", "Archivo recibido",
+                JOptionPane.YES_NO_OPTION);
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    recArch.setAceptacion(true);
+                    //Mostrar diálogo de selección de carpeta
+                    recArch.setDirectorio(this.obtenerDirectorio());
+                    recArch.despertar();
+                    this.dlgRecepArch = new DialogRecibirArchivo(this, false);
+                    this.dlgRecepArch.setVisible(true);
+                }
+//                else {
+//                    t.interrupt();
+//                }
+            }
+        }
     }
     
     public String obtenerDirectorio()
@@ -754,8 +837,7 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
             java.sql.Timestamp f = java.sql.Timestamp.valueOf(ldt);f.getTime()
                     
             java.sql.Date fecha = new java.sql.Date(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));*/
-            java.sql.Timestamp fechaHora = new java.sql.Timestamp(new java.util.Date().getTime());
-            this.objFlujoS.writeObject(new EnvioPrivado(this.login.getAlias(), destinatario, fechaHora, contenido, EnvioPrivado.Enum_tipo.MENSAJE));
+            this.objFlujoS.writeObject(new EnvioPrivado(this.login.getAlias(), destinatario, this.getFechaHora(), contenido, EnvioPrivado.Enum_tipo.MENSAJE));
         } catch (IOException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -789,5 +871,17 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    void enviarArchivo(String rutaFichero, String aliasContacto) {
+        EnvioPrivado envPriv = new EnvioPrivado(this.login.getAlias(), aliasContacto, this.getFechaHora(), "", EnvioPrivado.Enum_tipo.ARCHIVO);
+        EnvioArchivo envArch = new EnvioArchivo(this, rutaFichero, envPriv);
+        envArch.registerObserver(this);
+        thEnvioArch = new Thread(envArch);
+        thEnvioArch.start();
+    }
     
+    private Timestamp getFechaHora()
+    {
+        return new Timestamp(new java.util.Date().getTime());
+    }
 }
