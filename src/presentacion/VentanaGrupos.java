@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Adry
+ * @author Adrian Ledo
  */
 public class VentanaGrupos extends javax.swing.JInternalFrame
 {
@@ -399,15 +399,19 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.mdlContactosGrupo.clear();
     }
 
-    void actualizarMdlGrupos(ArrayList grupos)
+    void actualizarMdlGrupos(ArrayList<Grupo> grupos)
     {
         this.mdlGrupos.clear();
         this.limpiarCampos();
         if(grupos != null && !grupos.isEmpty())
         {
-            grupos.stream().forEach((g) -> {
+            /*grupos.stream().forEach((g) -> {
                 this.mdlGrupos.addElement((Grupo)g);
-            });
+            });*/
+            for(Grupo g : grupos)
+            {
+                this.mdlGrupos.addElement(g);
+            }
         }
         this.lstGrupos.repaint();
     }
@@ -417,9 +421,13 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.limpiarCampos();
         if(contactos != null && !contactos.isEmpty())
         {
-            contactos.stream().forEach((Contacto c) -> {
+            /*contactos.stream().forEach((Contacto c) -> {
                 this.mdlContactosGrupo.addElement(c);
-            });
+            });*/
+            for(Contacto c : contactos)
+            {
+                this.mdlContactosGrupo.addElement(c);
+            }
         }
         this.lstContactos.repaint();
     }
@@ -430,9 +438,13 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.limpiarCampos();
         if(contactos != null && !contactos.isEmpty())
         {
-            contactos.stream().forEach((Contacto c) -> {
+            /*contactos.stream().forEach((Contacto c) -> {
                 this.mdlContactosUsuario.addElement(c);
-            });
+            });*/
+            for(Contacto c : contactos)
+            {
+                this.mdlContactosUsuario.addElement(c);
+            }
         }
     }
 }

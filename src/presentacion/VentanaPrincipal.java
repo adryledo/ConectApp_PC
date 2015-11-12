@@ -27,6 +27,7 @@ import envio_recepcion.EnvioArchivo;
 import envio_recepcion.Observer;
 import envio_recepcion.RecepcionArchivo;
 import envio_recepcion.Subject;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -52,7 +53,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Adry
+ * @author Adrian Ledo
  */
 public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
 
@@ -61,12 +62,13 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
     private VentanaGrupos vGrupos;
     private DialogSeleccionContacto dlgConversacion;
     private DialogIniciarSesion dlgInicioSesion;
+    private VentanaInformes vInformes;
     
     private File fileAplicacion;
     private String caminoAplicacion;
     private String caminoArchivosConfiguracionConEspacios;
     //private String url, puerto, usuario, nombreBD, clave;
-    public String rutaPDF;
+    public static String rutaPDF;
     public String IP_SERVIDOR;
     
     private Socket socket;
@@ -255,7 +257,12 @@ private void mnuContactosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         this.vContactos = new VentanaContactos(this);
         this.escritorio.add(this.vContactos);
         GestorVentanas.setContactosAbierta(true);
-        this.vContactos.requestFocusInWindow();
+    //    this.vContactos.moveToFront();
+    }
+    try {
+        this.vContactos.setSelected(true);
+    } catch (PropertyVetoException ex) {
+        Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
     }
 }//GEN-LAST:event_mnuContactosActionPerformed
 
@@ -269,12 +276,20 @@ private void mnuConversacionActionPerformed(java.awt.event.ActionEvent evt) {//G
 }//GEN-LAST:event_mnuConversacionActionPerformed
 
 private void mnuInformesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuInformesActionPerformed
-    /*if(!GestorVentanas.isInformesAbierta())
+    if(!GestorVentanas.isInformesAbierta())
     {
-        //this.informes = new VentanaInformes(caminoArchivosConfiguracionConEspacios);
-//        this.escritorio.add(this.informes);
+        this.vInformes = new VentanaInformes(this, caminoArchivosConfiguracionConEspacios);
+        this.escritorio.add(this.vInformes);
         GestorVentanas.setInformesAbierta(true);
-    }*/
+        
+    }
+    try
+    {
+        this.vInformes.setSelected(true);
+    } catch (PropertyVetoException ex)
+    {
+        Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+    }
 }//GEN-LAST:event_mnuInformesActionPerformed
 
 private void mnuGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuGruposActionPerformed
@@ -283,7 +298,12 @@ private void mnuGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         this.vGrupos = new VentanaGrupos(this);
         this.escritorio.add(this.vGrupos);
         GestorVentanas.setGruposAbierta(true);
-        this.vGrupos.requestFocusInWindow();
+        
+    }
+    try {
+        this.vGrupos.setSelected(true);
+    } catch (PropertyVetoException ex) {
+        Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
     }
 }//GEN-LAST:event_mnuGruposActionPerformed
 
@@ -355,7 +375,7 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
         }*/
         if(GestorVentanas.isInformesAbierta())
         {
-//            this.informes.cargarGrupos();
+            this.vInformes.cargarGrupos(grupos);
         }
     }
 
@@ -374,7 +394,7 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
         }
         if(GestorVentanas.isInformesAbierta())
         {
-//            this.informes.cargarContactos();
+            this.vInformes.cargarContactos(contactos);
         }
             
     }
@@ -393,7 +413,12 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
             vc = new VentanaConver(this, alias, nombre);
         //    GestorVentanas.addVentanaConver(vc);
             this.escritorio.add(vc);
-            vc.requestFocusInWindow();
+            
+        }
+        try {
+            vc.setSelected(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
         return vc;
     }
@@ -631,6 +656,38 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                         Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
+                case CodigoMetodo.INFORME_CONTACTOS:
+                    try {
+                        Thread.sleep(100);
+                        this.vInformes.genInfContactos(comE.getContactos());
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case CodigoMetodo.INFORME_GRUPOS:
+                    try {
+                        Thread.sleep(100);
+                        this.vInformes.genInfGrupos(comE.getGrupos());
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case CodigoMetodo.INFORME_CONTACTOS_GRUPO:
+                    try {
+                        Thread.sleep(100);
+                        this.vInformes.genInfContactosGrupo(comE.getContactos());
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case CodigoMetodo.INFORME_MENSAJES_CONTACTO:
+                    try {
+                        Thread.sleep(100);
+                        this.vInformes.genInfMensajesContacto(comE.getEnviosPrivados());
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -718,7 +775,7 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
         //    this.usuario = propiedades.getProperty("usuario");
         //    this.nombreBD = propiedades.getProperty("nombreBD");
         //    this.clave = propiedades.getProperty("clave");
-            this.rutaPDF = propiedades.getProperty("RUTA_PDF");
+            rutaPDF = propiedades.getProperty("RUTA_PDF");
             this.IP_SERVIDOR = propiedades.getProperty("IP_SERVIDOR");
         } catch (IOException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
@@ -894,5 +951,41 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
     private Timestamp getFechaHora()
     {
         return new Timestamp(new java.util.Date().getTime());
+    }
+
+    void getInformeContactos() {
+        try {
+            this.objFlujoS.writeObject(CodigoMetodo.INFORME_CONTACTOS);
+            this.objFlujoS.writeObject(this.login.getAlias());
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    void getInformeGrupos() {
+        try {
+            this.objFlujoS.writeObject(CodigoMetodo.INFORME_GRUPOS);
+            this.objFlujoS.writeObject(this.login.getAlias());
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    void getInformeContactosGrupo(Grupo grupo) {
+        try {
+            this.objFlujoS.writeObject(CodigoMetodo.INFORME_CONTACTOS_GRUPO);
+            this.objFlujoS.writeObject(grupo);
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    void getInformeMensajesContacto(Contacto contacto) {
+        try {
+            this.objFlujoS.writeObject(CodigoMetodo.INFORME_MENSAJES_CONTACTO);
+            this.objFlujoS.writeObject(contacto);
+        } catch (IOException ex) {
+            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

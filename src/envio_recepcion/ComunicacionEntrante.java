@@ -46,9 +46,14 @@ public class ComunicacionEntrante extends Subject implements Runnable
     private EnvioPrivado envioPrivado;
     private Grupo grupo;
     private Contacto contacto;
+    private ArrayList<EnvioPrivado> enviosPrivados;
 
     public ComunicacionEntrante(Socket socket) {
         this.socket = socket;
+    }
+
+    public ArrayList<EnvioPrivado> getEnviosPrivados() {
+        return enviosPrivados;
     }
 
     public Contacto getContacto() {
@@ -154,6 +159,22 @@ public class ComunicacionEntrante extends Subject implements Runnable
                         break;
                     case CodigoMetodo.LISTAR_GRUPOS_CONTACTO:
                         this.grupos = (ArrayList<Grupo>) objFlujoE.readObject();
+                        this.notifyObservers();
+                        break;
+                    case CodigoMetodo.INFORME_CONTACTOS:
+                        this.contactos = (ArrayList<Contacto>) objFlujoE.readObject();
+                        this.notifyObservers();
+                        break;
+                    case CodigoMetodo.INFORME_GRUPOS:
+                        this.grupos = (ArrayList<Grupo>) objFlujoE.readObject();
+                        this.notifyObservers();
+                        break;
+                    case CodigoMetodo.INFORME_CONTACTOS_GRUPO:
+                        this.contactos = (ArrayList<Contacto>) objFlujoE.readObject();
+                        this.notifyObservers();
+                        break;
+                    case CodigoMetodo.INFORME_MENSAJES_CONTACTO:
+                        this.enviosPrivados = (ArrayList<EnvioPrivado>) objFlujoE.readObject();
                         this.notifyObservers();
                         break;
                     default:

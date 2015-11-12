@@ -442,15 +442,19 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         return 
     }*/
     
-    protected void actualizarMdlContactos(ArrayList contactos)
+    protected void actualizarMdlContactos(ArrayList<Contacto> contactos)
     {
         this.mdlContactos.clear();
         this.limpiarCampos();
         if(contactos != null && !contactos.isEmpty())
         {
-            contactos.stream().forEach((c) -> {
+            /*contactos.stream().forEach((c) -> {
                 this.mdlContactos.addElement((Contacto)c);
-            });
+            });*/
+            for(Contacto c : contactos)
+            {
+                this.mdlContactos.addElement(c);
+            }
         }
         this.lstContactos.repaint();
     }
@@ -460,9 +464,13 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     //    this.limpiarCampos();
         if(grupos != null && !grupos.isEmpty())
         {
-            grupos.stream().forEach((g) -> {
+            /*grupos.stream().forEach((g) -> {
                 this.mdlGruposContacto.addElement((Grupo) g);
-            });
+            });*/
+            for(Grupo g : grupos)
+            {
+                this.mdlGruposContacto.addElement(g);
+            }
         }
     }
 }
