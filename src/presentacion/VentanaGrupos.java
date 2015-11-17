@@ -20,6 +20,7 @@ package presentacion;
 import clases.Contacto;
 import clases.Grupo;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,11 +30,6 @@ import javax.help.HelpSetException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  *
@@ -69,11 +65,6 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
         }
     }
 
-/*    int getSelectedGroupId()
-    {
-        return this.mdlGrupos.getElementAt(this.lstGrupos.getSelectedIndex()).getId();
-    }
-*/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -84,6 +75,8 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        mnuAbrirVContactos = new javax.swing.JMenuItem();
         jLabel1 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
@@ -97,6 +90,14 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
         cmbContactosUsuario = new javax.swing.JComboBox();
         btnAnhadirContacto = new javax.swing.JButton();
         btnExpulsarContacto = new javax.swing.JButton();
+
+        mnuAbrirVContactos.setText("Abrir ventana Contactos");
+        mnuAbrirVContactos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuAbrirVContactosActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(mnuAbrirVContactos);
 
         setClosable(true);
         setResizable(true);
@@ -194,6 +195,11 @@ public class VentanaGrupos extends javax.swing.JInternalFrame
             public Object getElementAt(int i) { return strings[i]; }
         });
         lstContactos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        lstContactos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lstContactosMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(lstContactos);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -298,7 +304,6 @@ private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         String nuevoNombre = this.txtNombre.getText();
         this.principal.modificarGrupo(g, nuevoNombre);
     }
-    //this.limpiarCampos();
 }//GEN-LAST:event_btnGuardarActionPerformed
 
 private void lstGruposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstGruposMouseClicked
@@ -349,7 +354,6 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         Grupo grupo = this.mdlGrupos.elementAt(this.lstGrupos.getSelectedIndex());
         Contacto contacto = this.mdlContactosUsuario.getElementAt(this.cmbContactosUsuario.getSelectedIndex());
         this.principal.insertarGrupoContacto(grupo, contacto);
-    //    this.limpiarCampos();
     }//GEN-LAST:event_btnAnhadirContactoActionPerformed
 
     private void txtNombreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyPressed
@@ -377,6 +381,18 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.principal.expulsarContactoDeGrupo(g, c);
     }//GEN-LAST:event_btnExpulsarContactoActionPerformed
 
+    private void lstContactosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstContactosMouseClicked
+        if(evt.getButton() == MouseEvent.BUTTON3)
+        {
+            this.jPopupMenu1.show(this.lstContactos, evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_lstContactosMouseClicked
+
+    private void mnuAbrirVContactosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAbrirVContactosActionPerformed
+        this.principal.abrirVContactos();
+        this.jPopupMenu1.setVisible(false);
+    }//GEN-LAST:event_mnuAbrirVContactosActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnhadirContacto;
     private javax.swing.JButton btnEliminar;
@@ -386,10 +402,12 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList lstContactos;
     private javax.swing.JList lstGrupos;
+    private javax.swing.JMenuItem mnuAbrirVContactos;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 
@@ -405,9 +423,6 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.limpiarCampos();
         if(grupos != null && !grupos.isEmpty())
         {
-            /*grupos.stream().forEach((g) -> {
-                this.mdlGrupos.addElement((Grupo)g);
-            });*/
             for(Grupo g : grupos)
             {
                 this.mdlGrupos.addElement(g);
@@ -421,9 +436,6 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.limpiarCampos();
         if(contactos != null && !contactos.isEmpty())
         {
-            /*contactos.stream().forEach((Contacto c) -> {
-                this.mdlContactosGrupo.addElement(c);
-            });*/
             for(Contacto c : contactos)
             {
                 this.mdlContactosGrupo.addElement(c);
@@ -438,9 +450,6 @@ private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.limpiarCampos();
         if(contactos != null && !contactos.isEmpty())
         {
-            /*contactos.stream().forEach((Contacto c) -> {
-                this.mdlContactosUsuario.addElement(c);
-            });*/
             for(Contacto c : contactos)
             {
                 this.mdlContactosUsuario.addElement(c);

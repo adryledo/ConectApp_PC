@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author ADRIANLC
+ * @author Adrian Ledo
  */
 public class RecepcionArchivo extends Subject implements Runnable {
 
@@ -112,7 +112,6 @@ public class RecepcionArchivo extends Subject implements Runnable {
         byte buffer[] = new byte[tamBuf];
         int numBytesLeidos = 0;
         try {
-//            String nomCom = System.getProperty("java.io.tmpdir").concat(nombreArchivo);
             String nomCom = this.directorio.concat("/"+this.nombreArchivo);
             FileOutputStream ficheroDestino = new FileOutputStream(nomCom);
             this.numIter = (int) this.tam / tamBuf;
@@ -148,10 +147,7 @@ public class RecepcionArchivo extends Subject implements Runnable {
 
     @Override
     public void run() {
-        byte[] mensaje;
         InputStream flujoLectura;
-    //    Socket comunicaCliente;
-    //    ServerSocket socketServidor;
         int i;
         while(true)
         {
@@ -159,20 +155,11 @@ public class RecepcionArchivo extends Subject implements Runnable {
             this.recibido = false;
             this.aceptacion = false;
             try {
-            //    socketServidor = new ServerSocket(62003);
-            //    comunicaCliente = socketServidor.accept();
                 flujoLectura = this.socketArchivo.getInputStream();
                 this.flujoObjetos = new ObjectInputStream(flujoLectura);
                 this.flujoDatos = new DataInputStream(flujoLectura);
                 this.tam = this.flujoObjetos.readLong();
-                System.out.printf("Tamaño de fichero recibido: "+this.tam);
-            /*    i = this.flujo.readInt();
-                mensaje = new byte[i];
-                this.flujo.readFully(mensaje);
-                this.IP = this.flujo.readUTF();
-                this.nombreArchivo = new String(mensaje);*/
                 this.envPriv = (EnvioPrivado) this.flujoObjetos.readObject();
-                System.out.println("EnvioPrivado recibido");
                 this.nombreArchivo = this.envPriv.getContenido();
                 this.aliasContacto = this.envPriv.getRemitente();
                 notifyObservers();
@@ -181,8 +168,6 @@ public class RecepcionArchivo extends Subject implements Runnable {
                 }
                 recepcionFichero();
                 System.out.println("Fichero recibido!!!");
-            //    comunicaCliente.close();
-            //    socketServidor.close();
             } catch (IOException | SecurityException | ClassNotFoundException ex) {
                 Logger.getLogger(RecepcionArchivo.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -200,10 +185,7 @@ public class RecepcionArchivo extends Subject implements Runnable {
             TestBouncy esource2 = new TestBouncy();
             String key2 = "12345678";
             byte[] cad2 = imageData2;
-//            byte[] keyb2 = key2.getBytes();
-
             byte[] des2 = esource2.Decrypt(key2, cad2);
-//            byte[] imageByteArray2 = des2;
             nomCom = nomCom.substring(0, nomCom.length()-3);
             FileOutputStream imageOutFile2 = new FileOutputStream(nomCom);
             imageOutFile2.write(des2);

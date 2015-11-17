@@ -26,8 +26,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +33,7 @@ import presentacion.VentanaPrincipal;
 
 /**
  *
- * @author ADRIANLC
+ * @author Adrian Ledo
  */
 
 public class EnvioArchivo extends Subject implements Runnable {
@@ -47,25 +45,14 @@ public class EnvioArchivo extends Subject implements Runnable {
     private boolean iniciado;
     private boolean enviado;
     private int numIter;
-    //private String IP;
-//    private final Socket socketSalida;
-//    private final String aliasContacto;
     private final EnvioPrivado envPriv;
     private final VentanaPrincipal principal;
 
-/*    public Contacto getContacto() {
-        return contacto;
-    }*/
 
     public EnvioArchivo(VentanaPrincipal principal, String rutaFichero, EnvioPrivado envPriv) {
-//        this.IP = c.getIp();
-    //    this.socketSalida = socket;
-    //    this.fichEnviar = fichero;
-    //    this.nombreFich = fichero.getPath();
         this.principal = principal;
         this.nombreFich = rutaFichero;
         this.envPriv = envPriv;
-    //    this.aliasContacto = envPriv.getDestinatario();
         this.iniciado = false;
         this.enviado = false;
     }
@@ -93,10 +80,7 @@ public class EnvioArchivo extends Subject implements Runnable {
  
     @Override
     public void run() {
-    //    OutputStream flujoSalida;
         try {
-        //    Socket socketEnviar = new Socket(DialogIniciarSesion.IP_SERVIDOR, 62005);
-        //    flujoSalida = this.socketSalida.getOutputStream();
             this.flujoObjetos = this.principal.getObjFlujoSalidaArchivos();
             this.flujoDatos = new DataOutputStream(this.principal.getFlujoSalidaArchivos());
             
@@ -105,25 +89,13 @@ public class EnvioArchivo extends Subject implements Runnable {
             File fichEnviar = new File(this.nombreFich);
             
             String soloNombre = this.nombreFich.substring(this.nombreFich.lastIndexOf('\\') + 1);
-        /*    this.flujoDatos.writeInt(soloNombre.length());
-            System.out.printf("Tamaño de nombre enviado: "+soloNombre.length());
-            this.flujoDatos.writeBytes(soloNombre);
-            System.out.println("Nombre enviado: "+soloNombre);*/
-        //    this.flujo.writeUTF(InetAddress.getLocalHost().getHostAddress());
             this.envPriv.setContenido(soloNombre);
             this.flujoObjetos.writeObject(this.envPriv);
-            System.out.println("EnvioPrivado enviado");
-        /*    this.flujo.writeInt(this.aliasContacto.length());
-            System.out.println("Tamaño de alias enviado: "+this.aliasContacto.length());
-            this.flujo.writeBytes(this.aliasContacto);
-            System.out.println("Alias enviado: "+this.aliasContacto);*/
             this.tam = fichEnviar.length();
             this.flujoDatos.writeLong(this.tam);
-            System.out.println("Tamaño de fichero enviado: "+this.tam);
             envioFich();
             System.out.println("Fichero enviado!!!");
             fichEnviar.delete();
-            //socketEnviar.close();
         } catch (UnknownHostException e) {
             System.out.println("Referencia a host no resuelta");
         } catch (IOException e) {

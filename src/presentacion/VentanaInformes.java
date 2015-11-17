@@ -20,9 +20,7 @@ package presentacion;
 import clases.Contacto;
 import clases.EnvioPrivado;
 import clases.Grupo;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.help.HelpBroker;
@@ -37,11 +35,6 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
  * @author Adrian Ledo
@@ -52,8 +45,6 @@ public class VentanaInformes extends javax.swing.JInternalFrame {
     private DefaultComboBoxModel<Grupo> mdlGrupos;
     private DefaultComboBoxModel<Contacto> mdlContactos;
     
-//    private static final String imagen = "../imagenes/Desert.jpg";
-    private String directorioClasses;
     private String directorioInformes;
     
         
@@ -61,17 +52,8 @@ public class VentanaInformes extends javax.swing.JInternalFrame {
         initComponents();
         
         this.principal = principal;
-        this.directorioClasses = dirClasses;
-        this.directorioInformes = directorioClasses.concat("/informes");
-        System.out.println(directorioInformes);
-//        try
-//        {
-//            URL urlInformes = this.getClass().getResource("../informes");
-//            directorioInformes = urlInformes.toURI().getPath().substring(1);
-//            System.out.println(directorioInformes);
-//        } catch (URISyntaxException ex) {
-//            Logger.getLogger(VentanaInformes.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        //this.directorioInformes = dirClasses.concat("/informes");
+        this.directorioInformes = dirClasses.concat("informes");
         
         this.mdlGrupos = new DefaultComboBoxModel<>();
         this.cmbGrupos.setModel(mdlGrupos);
@@ -266,120 +248,18 @@ private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
 
     private void btnListaContactosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaContactosActionPerformed
         this.principal.getInformeContactos();
-        /*String listaContactos = directorioInformes.concat("/listaContactos.jrxml");
-        String listaContactosCompilado = directorioInformes.concat("/listaContactos.jasper");
-        String listaContactosRellenada = directorioInformes.concat("/listaContactos.jrprint");
-        String listaContactosPdf = directorioInformes.concat("/listaContactos"+getFechaHora()+".pdf");
-
-        try
-        {
-            JasperCompileManager.compileReportToFile(listaContactos, listaContactosCompilado);
-
-//            HashMap parametros = new HashMap();
-//            parametros.put("LOGO", new FileInputStream(imagen));
-
-            Connection conexion = Conexion.getConexion();
-//            JasperFillManager.fillReportToFile(listaPiezasCompilado, listaPiezasRellenada, parametros, conexion);
-            JasperFillManager.fillReportToFile(listaContactosCompilado, listaContactosRellenada, new HashMap(), conexion);
-
-            JasperExportManager.exportReportToPdfFile(listaContactosRellenada, listaContactosPdf);
-
-            abrirVisorPDF(listaContactosPdf);
-        } catch (JRException ex) {
-            Logger.getLogger(VentanaInformes.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
     }//GEN-LAST:event_btnListaContactosActionPerformed
 
     private void btnListaGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaGruposActionPerformed
         this.principal.getInformeGrupos();
-        /*String listaGrupos = directorioInformes.concat("/listaGrupos.jrxml");
-        String listaGruposCompilado = directorioInformes.concat("/listaGrupos.jasper");
-        String listaGruposRellenada = directorioInformes.concat("/listaGrupos.jrprint");
-        String listaGruposPdf = directorioInformes.concat("/listaGrupos"+getFechaHora()+".pdf");
-
-        try
-        {
-            JasperCompileManager.compileReportToFile(listaGrupos, listaGruposCompilado);
-
-//            HashMap parametros = new HashMap();
-//            parametros.put("LOGO", new FileInputStream(imagen));
-
-            Connection conexion = Conexion.getConexion();
-//            JasperFillManager.fillReportToFile(listaPiezasCompilado, listaPiezasRellenada, parametros, conexion);
-            JasperFillManager.fillReportToFile(listaGruposCompilado, listaGruposRellenada, new HashMap(), conexion);
-
-            JasperExportManager.exportReportToPdfFile(listaGruposRellenada, listaGruposPdf);
-
-            abrirVisorPDF(listaGruposPdf);
-        } catch (JRException ex) {
-            Logger.getLogger(VentanaInformes.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
     }//GEN-LAST:event_btnListaGruposActionPerformed
 
     private void btnContactosGrupoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContactosGrupoActionPerformed
         this.principal.getInformeContactosGrupo(this.mdlGrupos.getElementAt(this.cmbGrupos.getSelectedIndex()));
-        /*if(this.cmbGrupos.getSelectedIndex() == -1)
-        {
-            JOptionPane.showMessageDialog(this, "Seleccione un grupo");
-            return;
-        }
-        
-        String listaContactosGrupo = directorioInformes.concat("/listaContactosGrupo.jrxml");
-        String listaContactosGrupoCompilado = directorioInformes.concat("/listaContactosGrupo.jasper");
-        String listaContactosGrupoRellenada = directorioInformes.concat("/listaContactosGrupo.jrprint");
-        String listaContactosGrupoPdf = directorioInformes.concat("/listaContactosGrupo"+getFechaHora()+".pdf");
-
-        try
-        {
-            JasperCompileManager.compileReportToFile(listaContactosGrupo, listaContactosGrupoCompilado);
-
-            HashMap parametros = new HashMap();
-            parametros.put("GRUPO", this.mdlGrupos.getElementAt(this.cmbGrupos.getSelectedIndex()).getId());
-
-            Connection conexion = Conexion.getConexion();
-            JasperFillManager.fillReportToFile(listaContactosGrupoCompilado, listaContactosGrupoRellenada, parametros, conexion);
-//            JasperFillManager.fillReportToFile(listaContactosGrupoCompilado, listaContactosGrupoRellenada, new HashMap(), conexion);
-
-            JasperExportManager.exportReportToPdfFile(listaContactosGrupoRellenada, listaContactosGrupoPdf);
-
-            abrirVisorPDF(listaContactosGrupoPdf);
-        } catch (JRException ex) {
-            Logger.getLogger(VentanaInformes.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
     }//GEN-LAST:event_btnContactosGrupoActionPerformed
 
     private void btnMensajesContactoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensajesContactoActionPerformed
         this.principal.getInformeMensajesContacto(this.mdlContactos.getElementAt(this.cmbContactos.getSelectedIndex()));
-        /*if(this.cmbContactos.getSelectedIndex() == -1)
-        {
-            JOptionPane.showMessageDialog(this, "Seleccione un contacto");
-            return;
-        }
-        
-        String listaMensajesContacto = directorioInformes.concat("/listaMensajesContacto.jrxml");
-        String listaMensajeContactoCompilado = directorioInformes.concat("/listaMensajesContacto.jasper");
-        String listaMensajeContactoRellenada = directorioInformes.concat("/listaMensajesContacto.jrprint");
-        String listaMensajesContactoPdf = directorioInformes.concat("/listaMensajesContacto"+getFechaHora()+".pdf");
-
-        try
-        {
-            JasperCompileManager.compileReportToFile(listaMensajesContacto, listaMensajeContactoCompilado);
-
-            HashMap parametros = new HashMap();
-            Contacto c = this.mdlContactos.getElementAt(this.cmbContactos.getSelectedIndex());
-            parametros.put("CREADOR", c.getCreador());
-            parametros.put("ALIAS", c.getAlias());
-            
-            Connection conexion = Conexion.getConexion();
-            JasperFillManager.fillReportToFile(listaMensajeContactoCompilado, listaMensajeContactoRellenada, parametros, conexion);
-//            JasperFillManager.fillReportToFile(listaContactosGrupoCompilado, listaContactosGrupoRellenada, new HashMap(), conexion);
-
-            JasperExportManager.exportReportToPdfFile(listaMensajeContactoRellenada, listaMensajesContactoPdf);
-
-            abrirVisorPDF(listaMensajesContactoPdf);
-        } catch (JRException ex) {
-            Logger.getLogger(VentanaInformes.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
     }//GEN-LAST:event_btnMensajesContactoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -417,20 +297,6 @@ private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
     private void limpiarCampos() {
         this.cmbGrupos.setSelectedIndex(-1);
         this.cmbContactos.setSelectedIndex(-1);
-    }
-    
-    private String getFechaHora()
-    {
-        Date fecha = new Date();
-        return String.valueOf(fecha.getTime());
-    }
-    
-    private void abrirVisorPDF(String archivo) {
-        try {
-            Runtime.getRuntime().exec("\""+VentanaPrincipal.rutaPDF+"\" \""+archivo+"\"");
-        } catch (IOException ex) {
-            Logger.getLogger("ERROR AL ABRIR EL LECTOR DE PDF");
-        }
     }
 
     void genInfContactos(ArrayList<Contacto> contactos) {

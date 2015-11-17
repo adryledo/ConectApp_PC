@@ -36,7 +36,7 @@ public class TestBouncy {
         int tam = cipher.processBytes(ptBytes, 0, ptBytes.length, rv, 0);
         try {
             cipher.doFinal(rv, tam);
-        } catch (Exception ce) {
+        } catch (DataLengthException | IllegalStateException | InvalidCipherTextException ce) {
             ce.printStackTrace();
         }
         return rv;
@@ -50,7 +50,7 @@ public class TestBouncy {
         int tam = cipher.processBytes(cipherText, 0, cipherText.length, rv, 0);
         try {
             cipher.doFinal(rv, tam);
-        } catch (Exception ce) {
+        } catch (DataLengthException | IllegalStateException | InvalidCipherTextException ce) {
             ce.printStackTrace();
         }
         return rv;

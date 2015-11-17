@@ -46,11 +46,6 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
  * @author Adrian Ledo
@@ -67,8 +62,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
     private File fileAplicacion;
     private String caminoAplicacion;
     private String caminoArchivosConfiguracionConEspacios;
-    //private String url, puerto, usuario, nombreBD, clave;
-    public static String rutaPDF;
     public String IP_SERVIDOR;
     
     private Socket socket;
@@ -87,13 +80,13 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
     private Usuario login;
     private DialogRecibirArchivo dlgRecepArch;
     
-//    private DialogRecibirArchivo dra;
     
     /**
      * Creates new form VentanaPrincipal
      */
     public VentanaPrincipal() {
-        configurarDirectoriosProperties();
+        //this.configurarDirectoriosProperties();
+        this.configurarDirectoriosPropertiesProduccion();
         leerProperties();
         int intentosConexion = 0;
         
@@ -162,10 +155,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
     public ObjectOutputStream getObjFlujoSalidaArchivos() {
         return objFlujoSalidaArchivos;
     }
-
-/*    public JDesktopPane getEscritorio() {
-        return escritorio;
-    }*/
 
     public Usuario getLogin() {
         return login;
@@ -252,19 +241,23 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Observer{
     }// </editor-fold>//GEN-END:initComponents
    
 private void mnuContactosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuContactosActionPerformed
+    this.abrirVContactos();
+}//GEN-LAST:event_mnuContactosActionPerformed
+
+void abrirVContactos()
+{
     if(!GestorVentanas.isContactosAbierta())
     {
         this.vContactos = new VentanaContactos(this);
         this.escritorio.add(this.vContactos);
         GestorVentanas.setContactosAbierta(true);
-    //    this.vContactos.moveToFront();
     }
     try {
         this.vContactos.setSelected(true);
     } catch (PropertyVetoException ex) {
         Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
     }
-}//GEN-LAST:event_mnuContactosActionPerformed
+}
 
 private void mnuConversacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuConversacionActionPerformed
     if(!GestorVentanas.isSelContactoAbierta())
@@ -281,8 +274,8 @@ private void mnuInformesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         this.vInformes = new VentanaInformes(this, caminoArchivosConfiguracionConEspacios);
         this.escritorio.add(this.vInformes);
         GestorVentanas.setInformesAbierta(true);
-        
     }
+    
     try
     {
         this.vInformes.setSelected(true);
@@ -293,29 +286,38 @@ private void mnuInformesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 }//GEN-LAST:event_mnuInformesActionPerformed
 
 private void mnuGruposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuGruposActionPerformed
+    this.abrirVGrupos();
+}//GEN-LAST:event_mnuGruposActionPerformed
+
+void abrirVGrupos()
+{
     if(!GestorVentanas.isGruposAbierta())
     {
         this.vGrupos = new VentanaGrupos(this);
         this.escritorio.add(this.vGrupos);
         GestorVentanas.setGruposAbierta(true);
-        
     }
+    
     try {
         this.vGrupos.setSelected(true);
     } catch (PropertyVetoException ex) {
         Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
     }
-}//GEN-LAST:event_mnuGruposActionPerformed
+}
 
 private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-/*    if(thRecibirMensajes.isAlive())
+    if(this.thComEntrante.isAlive())
     {
-        thRecibirMensajes.interrupt();
+        this.thComEntrante.interrupt();
     }
-    if(thRecibirArchivos.isAlive())
+    if(this.thRecepcionArchivo.isAlive())
     {
-        thRecibirArchivos.interrupt();
-    }*/
+        this.thRecepcionArchivo.interrupt();
+    }
+    if(this.thEnvioArch.isAlive())
+    {
+        this.thEnvioArch.interrupt();
+    }
 }//GEN-LAST:event_formWindowClosed
 
     /**
@@ -369,10 +371,6 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
         {
             this.vGrupos.actualizarMdlGrupos(grupos);
         }
-    /*    if(GestorVentanas.isContactosAbierta())
-        {
-            this.vContactos.actualizarMdlGrupos(grupos);
-        }*/
         if(GestorVentanas.isInformesAbierta())
         {
             this.vInformes.cargarGrupos(grupos);
@@ -411,10 +409,9 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
         if((vc=this.recuperarVentanaConver(alias)) == null)
         {
             vc = new VentanaConver(this, alias, nombre);
-        //    GestorVentanas.addVentanaConver(vc);
             this.escritorio.add(vc);
-            
         }
+        
         try {
             vc.setSelected(true);
         } catch (PropertyVetoException ex) {
@@ -506,19 +503,15 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     else if(comE.getResultado() == 0)
                     {
                         JOptionPane.showMessageDialog(this, "Contacto insertado");
-                    //    this.contactos.mostrarContactos();
                     }
                     break;
                 case CodigoMetodo.LISTAR_CONTACTOS_USUARIO:
-                    /*if(!comE.getContactos().isEmpty())
-                    {*/
-                        try {
-                            Thread.sleep(100); // Sino lanza un NullPointerException
-                            this.mostrarContactos(comE.getContactos());
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                 //   }
+                    try {
+                        Thread.sleep(100); // Sino lanza un NullPointerException
+                        this.mostrarContactos(comE.getContactos());
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     break;
                 case CodigoMetodo.ELIMINAR_CONTACTO:
                     if(comE.getResultado() != 0)
@@ -540,15 +533,12 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     }
                     break;
                 case CodigoMetodo.LISTAR_GRUPOS:
-                    /*if(!comE.getGrupos().isEmpty())
-                    {*/
-                        try {
-                            Thread.sleep(100);
-                            this.mostrarGrupos(comE.getGrupos());
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                //    }
+                    try {
+                        Thread.sleep(100);
+                        this.mostrarGrupos(comE.getGrupos());
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     break;
                 case CodigoMetodo.INSERTAR_GRUPO:
                     try {
@@ -609,22 +599,14 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     break;
                 case CodigoMetodo.RECIBIR_MENSAJE_P:
                     try {
-                        Thread.sleep(100);EnvioPrivado envP = comE.getEnvioPrivado();
-                            // Comprobar si existe el contacto para poner su nombre en vez de null
-                            VentanaConver vc = this.addConversacion(envP.getRemitente(), null);
-                            vc.recibirMensajeP(envP);
+                        Thread.sleep(100);
+                        EnvioPrivado envP = comE.getEnvioPrivado();
+                        // Comprobar si existe el contacto para poner su nombre en vez de null
+                        VentanaConver vc = this.addConversacion(envP.getRemitente(), null);
+                        vc.recibirMensajeP(envP);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
-                    /*if((vc=this.recuperarVentanaConver(envP.getRemitente())) != null)
-                    {
-                        vc.recibirMensajeP(envP);
-                    } else
-                    {
-                        this.addConversacion(envP.getRemitente(), null);
-                        
-                    }*/
                     break;
                 case CodigoMetodo.INSERTAR_GRUPO_CONTACTO:
                     if(comE.getResultado() != 0)
@@ -634,7 +616,6 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     {
                         JOptionPane.showMessageDialog(this, "Contacto añadido al grupo");
                         this.mostrarContactosGrupo(comE.getGrupo());
-                    //    this.mostrarGruposContacto(comE.getContacto());
                     }
                     break;
                 case CodigoMetodo.ELIMINAR_GRUPO_CONTACTO:
@@ -645,7 +626,6 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     {
                         JOptionPane.showMessageDialog(this, "Contacto expulsado del grupo");
                         this.mostrarContactosGrupo(comE.getGrupo());
-                    //    this.mostrarGruposContacto(comE.getContacto());
                     }
                     break;
                 case CodigoMetodo.LISTAR_GRUPOS_CONTACTO:
@@ -695,8 +675,6 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
         else if(subject instanceof RecepcionArchivo)
         {
             RecepcionArchivo recArch = (RecepcionArchivo) subject;
-            /*VentanaConver vConver = this.addConversacion(recArch.getAliasContacto(), null);
-            vConver.actualizaBarraProgreso(recArch.getNumIter());*/
             
             if (recArch.isAceptacion()) {
                 if(!recArch.isIniciado())
@@ -725,9 +703,6 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
                     this.dlgRecepArch = new DialogRecibirArchivo(this, false);
                     this.dlgRecepArch.setVisible(true);
                 }
-//                else {
-//                    t.interrupt();
-//                }
             }
         } else if(subject instanceof EnvioArchivo)
         {
@@ -764,18 +739,20 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
         this.caminoArchivosConfiguracionConEspacios = this.caminoAplicacion.replaceAll("%20", " ").replaceAll("\\\\", "/");
         this.caminoArchivosConfiguracionConEspacios = this.caminoArchivosConfiguracionConEspacios.concat("/../../build/classes");
     }
+    
+    private void configurarDirectoriosPropertiesProduccion() {
+        this.fileAplicacion = new File(VentanaPrincipal.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+        this.caminoAplicacion = this.fileAplicacion.getAbsolutePath();
+        String caminoArchivosConfiguracion = caminoAplicacion.replace(fileAplicacion.getName(), "");
+        this.caminoArchivosConfiguracionConEspacios = caminoArchivosConfiguracion.replaceAll("%20", " ").replaceAll("\\\\", "/");
+    }
 
     private void leerProperties() {
         Properties propiedades = new Properties();
         try {
-            String fichConf = this.caminoArchivosConfiguracionConEspacios.concat("/configuracion/config.properties");
+//            String fichConf = this.caminoArchivosConfiguracionConEspacios.concat("/configuracion/config.properties");
+            String fichConf = this.caminoArchivosConfiguracionConEspacios.concat("configuracion/config.properties");
             propiedades.load(new FileInputStream(fichConf));
-        //    this.url = propiedades.getProperty("url");
-        //    this.puerto = propiedades.getProperty("puerto");
-        //    this.usuario = propiedades.getProperty("usuario");
-        //    this.nombreBD = propiedades.getProperty("nombreBD");
-        //    this.clave = propiedades.getProperty("clave");
-            rutaPDF = propiedades.getProperty("RUTA_PDF");
             this.IP_SERVIDOR = propiedades.getProperty("IP_SERVIDOR");
         } catch (IOException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
@@ -784,28 +761,14 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
 
     void iniciarSesion(Usuario usuario) throws IOException {
         objFlujoS.writeObject(CodigoMetodo.INICIAR_SESION);
-        System.out.println("DialogIniciarSesion: Código de método insertado en flujo");
         objFlujoS.writeObject(usuario);
         this.login = usuario;
-        System.out.println("DialogIniciarSesion: Usuario insertado en flujo");
-    /*    String IP = new String("192.168.21.17");
-        String IP2 = this.socket.getInetAddress().getHostAddress();
-        String IP3 = this.socket.getLocalSocketAddress().toString();
-        String IP4 = this.socket.getLocalAddress().getHostAddress();
-        objFlujoS.writeObject(IP);
-        System.out.println("DialogIniciarSesion: IP insertada en flujo");*/
     }
 
     void registrarse(Usuario usuario) throws IOException {
         objFlujoS.writeObject(CodigoMetodo.REGISTRARSE);
-        System.out.println("DialogIniciarSesion: Código de método insertado en flujo");
         objFlujoS.writeObject(usuario);
         this.login = usuario;
-        System.out.println("DialogIniciarSesion: Usuario insertado en flujo");
-        //flujo.writeUTF(socketCliente.getLocalSocketAddress().toString());
-    /*    String IP = new String("192.168.21.17");
-        objFlujoS.writeObject(IP);
-        System.out.println("DialogIniciarSesion: IP insertada en flujo");*/
     }
 
     final void cerrar() {
@@ -900,11 +863,6 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
     void enviarMensajeP(String contenido, String destinatario) {
         try {
             this.objFlujoS.writeObject(CodigoMetodo.ENVIAR_MENSAJE_P);
-            
-        /*LocalDateTime ldt = LocalDateTime.now();
-            java.sql.Timestamp f = java.sql.Timestamp.valueOf(ldt);f.getTime()
-                    
-            java.sql.Date fecha = new java.sql.Date(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));*/
             this.objFlujoS.writeObject(new EnvioPrivado(this.login.getAlias(), destinatario, this.getFechaHora(), contenido, EnvioPrivado.Enum_tipo.MENSAJE));
         } catch (IOException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);

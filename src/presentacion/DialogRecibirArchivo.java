@@ -16,20 +16,17 @@
  */
 
 
-/*
- * DialogRecibirArchivo.java
- *
- * Created on 25-mar-2014, 8:43:03
- */
 package presentacion;
 
 /**
  *
- * @author ADRIANLC
+ * @author Adrian Ledo
  */
 public class DialogRecibirArchivo extends javax.swing.JDialog {
 
-    /** Creates new form DialogRecibirArchivo */
+    /** Creates new form DialogRecibirArchivo
+     * @param parent
+     * @param modal */
     public DialogRecibirArchivo(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();

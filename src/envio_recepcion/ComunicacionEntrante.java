@@ -91,18 +91,15 @@ public class ComunicacionEntrante extends Subject implements Runnable
         try {
             flujoEntrada = this.socket.getInputStream();
             objFlujoE = new ObjectInputStream(flujoEntrada);
-        //    this.resultado = objFlujoE.readInt();
             while(this.socket.isConnected())
             {
                 this.codigoMetodo = (Integer) objFlujoE.readObject();
-                System.out.println("ComunicacionEntrante: Codigo leído de flujo");
                 switch(this.codigoMetodo)
                 {
                     case CodigoMetodo.REGISTRARSE:
                     case CodigoMetodo.INICIAR_SESION:
                     case CodigoMetodo.INSERTAR_CONTACTO:
                         this.resultado = (int) objFlujoE.readObject();
-                        System.out.println("ComunicacionEntrante: Resultado leído de flujo");
                         this.notifyObservers();
                         break;
                     case CodigoMetodo.LISTAR_CONTACTOS_USUARIO:
@@ -188,14 +185,6 @@ public class ComunicacionEntrante extends Subject implements Runnable
             System.exit(-1);
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(ComunicacionEntrante.class.getName()).log(Level.SEVERE, null, ex);
-        }/* finally
-        {
-            try {
-                objFlujoE.close();
-                flujoEntrada.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ComunicacionEntrante.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }*/
+        }
     }
 }

@@ -19,7 +19,6 @@ package presentacion;
 
 import clases.EnvioPrivado;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.help.HelpBroker;
@@ -29,13 +28,11 @@ import javax.swing.JFileChooser;
 
 /**
  *
- * @author Adry
+ * @author Adrian Ledo
  */
 public class VentanaConver extends javax.swing.JInternalFrame {
 
     private VentanaPrincipal principal;
-    //private String IP;
-//    private Contacto contacto;
     private String alias;
     private String nombre;
     private String rutaFichero;
@@ -44,12 +41,10 @@ public class VentanaConver extends javax.swing.JInternalFrame {
     VentanaConver(VentanaPrincipal principal, String alias, String nombre) {
         initComponents();
         this.principal = principal;
-        //this.IP = c.getIp();
         this.setTitle(nombre==null ? alias : nombre);
         this.alias = alias;
         this.nombre = nombre;
         this.rutaFichero = null;
-    //    this.contacto = c;
         
         java.net.URL helpURL = this.getClass().getResource("/ayudas/ayuda.hs");
         try {
@@ -59,11 +54,6 @@ public class VentanaConver extends javax.swing.JInternalFrame {
         } catch (HelpSetException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-//        this.jFileChooser1 = new JFileChooser();
-//        Hacer envio y recepcion archivos
-//        ENVIAR IP DESDE DONDE SE ENVÍA PARA SABER LA VENTANA DONDE MOSTRAR EL MENSAJE
-//        SINO SIEMPRE COGE LA IP (NO EL HOSTNAME)
     }
 
     public String getAlias() {
@@ -73,14 +63,6 @@ public class VentanaConver extends javax.swing.JInternalFrame {
     public String getNombre() {
         return nombre;
     }
-
-    /*Contacto getContacto() {
-        return contacto;
-    }
-
-    public String getIP() {
-        return IP;
-    }*/
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -114,23 +96,6 @@ public class VentanaConver extends javax.swing.JInternalFrame {
             e1.printStackTrace();
         }
         setVisible(true);
-        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
-            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
-                formInternalFrameClosed(evt);
-            }
-            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
-            }
-            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
-            }
-        });
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jLabel1.setText("Mensajes");
@@ -141,6 +106,7 @@ public class VentanaConver extends javax.swing.JInternalFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 0, 0);
         getContentPane().add(jLabel1, gridBagConstraints);
 
+        txtConversacion.setEditable(false);
         txtConversacion.setColumns(20);
         txtConversacion.setRows(5);
         jScrollPane1.setViewportView(txtConversacion);
@@ -261,23 +227,7 @@ private void txtMensajeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     }
 }//GEN-LAST:event_txtMensajeKeyPressed
 
-private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosed
-    /*if(thClienteEnviar != null && thClienteEnviar.isAlive())
-    {
-        thClienteEnviar.interrupt();
-    }
-    if(thEnviarArchivo != null && thEnviarArchivo.isAlive())
-    {
-        thEnviarArchivo.interrupt();
-    }*/
-}//GEN-LAST:event_formInternalFrameClosed
-
 private void btnEnviarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarArchivoActionPerformed
-    /*EnvioArchivo enviarArchivo = new EnvioArchivo(c, this.txtArchivo.getText());
-    jProgressBar1.setMaximum(0);
-    thEnviarArchivo = new Thread(enviarArchivo);
-    enviarArchivo.registerObserver(this);
-    thEnviarArchivo.start();*/
     this.jProgressBar1.setMaximum(0);
     this.principal.enviarArchivo(this.rutaFichero, this.alias);
 }//GEN-LAST:event_btnEnviarArchivoActionPerformed
@@ -285,11 +235,6 @@ private void btnEnviarArchivoActionPerformed(java.awt.event.ActionEvent evt) {//
 private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
     JFileChooser jfcElegirArchivo = 
             new JFileChooser("HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer");
-        
-//    java.io.File f=new java.io.File("");
-//    java.io.File f2[]={f};
-//    this.jFileChooser1.setSelectedFile(f);
-//    this.jFileChooser1.setSelectedFiles(f2);
         
     int resultado = jfcElegirArchivo.showOpenDialog(this);
     switch(resultado){
@@ -318,40 +263,6 @@ private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     private javax.swing.JTextArea txtConversacion;
     private javax.swing.JTextField txtMensaje;
     // End of variables declaration//GEN-END:variables
-
-/*    @Override
-    public void update(Subject subject) {
-        if(subject instanceof ClienteEnviar)
-        {
-            ClienteEnviar c = (ClienteEnviar) subject;
-            if(!c.isEnviado())
-            {
-                JOptionPane.showMessageDialog(this, "No se pudo enviar el mensaje");
-            }/* else
-            {
-                GestionMensajes.insertarMensaje(new Mensaje(
-                        c.getContacto().getId(), c.getMensaje(), false));
-            }*/
-/*        }
-        if(subject instanceof EnviarArchivo)
-        {
-            EnviarArchivo e = (EnviarArchivo) subject;
-            if(!e.isIniciado())
-            {
-                iniciaBarraProgreso(e.getNumIter());
-            } else
-            {
-                actualizaBarraProgreso(e.getNumIter());
-            }
-            
-            if(e.isEnviado())
-            {
-                /*GestionArchivos.insertarArchivo(new Archivo(e.getContacto().getId(), 
-                        e.getRutaFich(), false));*/
-/*                JOptionPane.showMessageDialog(this, "Archivo enviado");
-            }
-        }
-    }*/
     
     public void mostrarMensaje(String mensaje)
     {

@@ -21,12 +21,12 @@ import java.util.Date;
 
 /**
  *
- * @author ADRIANLC
+ * @author Adrian Ledo
  */
 public class Archivo
 {
-    private String aliasUsuario, aliasContacto, nombre;
-    private Date fecha;
+    private final String aliasUsuario, aliasContacto, nombre;
+    private final Date fecha;
 
     public Archivo(String aliasUsuario, String aliasContacto, String nombre, Date fecha) {
         this.aliasUsuario = aliasUsuario;

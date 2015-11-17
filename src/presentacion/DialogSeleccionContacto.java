@@ -16,11 +16,6 @@
  */
 
 
-/*
- * DialogSeleccionContacto.java
- *
- * Created on 24-feb-2014, 9:48:44
- */
 package presentacion;
 
 import clases.Contacto;
@@ -30,16 +25,17 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author ADRIANLC
+ * @author Adrian Ledo
  */
 public class DialogSeleccionContacto extends javax.swing.JDialog {
 
-    private DefaultComboBoxModel<Contacto> mdlContactos;
+    private final DefaultComboBoxModel<Contacto> mdlContactos;
     private final VentanaPrincipal principal;
     
     /** Creates new form DialogSeleccionContacto
      * @param parent
-     * @param modal */
+     * @param modal
+     */
     public DialogSeleccionContacto(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.principal = (VentanaPrincipal) parent;
@@ -193,9 +189,6 @@ private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     void actualizarMdlContactos(ArrayList<Contacto> contactos) {
         this.mdlContactos.removeAllElements();
-        /*contactos.stream().forEach((c) -> {
-            this.mdlContactos.addElement((Contacto)c);
-        });*/
         for(Contacto c : contactos)
         {
             this.mdlContactos.addElement(c);

@@ -19,7 +19,7 @@ package envio_recepcion;
 
 /**
  *
- * @author ADRIANLC
+ * @author Adrian Ledo
  */
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -40,11 +40,7 @@ public abstract class Subject
         this.registeredObservers.remove(observer);
     }
 
-    protected void notifyObservers() {
-        /*registeredObservers.stream().forEach((observer) -> {
-            observer.update(this);
-        });*/
-        
+    protected void notifyObservers() {        
         for(Observer observer : registeredObservers)
         {
             observer.update(this);

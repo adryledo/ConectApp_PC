@@ -10,6 +10,13 @@
 <project name="ConectApp_PC" default="default" basedir=".">
     <description>Builds, tests, and runs the project ConectApp_PC.</description>
     <import file="nbproject/build-impl.xml"/>
+    <target name="-post-jar">
+        <echo file="${dist.dir}/ConectApp_PC.bat">start javaw -jar ${application.title}.jar</echo>
+        <copy file="${src.dir}/configuracion/config.properties" todir="${dist.dir}/configuracion"/>
+        <copy todir="${dist.dir}/informes">
+            <fileset dir="${src.dir}/informes"/>
+        </copy>
+    </target>
     <!--
 
     There exist several targets which are by default empty and which can be 
