@@ -277,9 +277,11 @@ private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
 
     void cargarGrupos(ArrayList<Grupo> arrayGrupos) {
         this.mdlGrupos.removeAllElements();
-        arrayGrupos.stream().forEach((grupo) -> {
+        for(Grupo grupo : arrayGrupos)
+        {
             this.mdlGrupos.addElement(grupo);
-        });
+        }
+        
         this.cmbGrupos.repaint();
         limpiarCampos();
     }
@@ -287,9 +289,10 @@ private void formInternalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
     void cargarContactos(ArrayList<Contacto> arrayContactos)
     {
         this.mdlContactos.removeAllElements();
-        arrayContactos.stream().forEach((c) -> {
+        for(Contacto c : arrayContactos)
+        {
             this.mdlContactos.addElement(c);
-        });
+        }
         this.cmbContactos.repaint();
         limpiarCampos();
     }

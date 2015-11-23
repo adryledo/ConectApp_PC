@@ -11,11 +11,21 @@
     <description>Builds, tests, and runs the project ConectApp_PC.</description>
     <import file="nbproject/build-impl.xml"/>
     <target name="-post-jar">
-        <echo file="${dist.dir}/ConectApp_PC.bat">start javaw -jar ${application.title}.jar</echo>
+        <!-- Generar bat que ejecute el jar principal de nuestra aplicacion -->
+        <echo file="${dist.dir}/${application.title}.bat">start javaw -jar ${application.title}.jar</echo>
+        <!-- Copiar el archivo de configuracion si lo tenemos -->
         <copy file="${src.dir}/configuracion/config.properties" todir="${dist.dir}/configuracion"/>
+        <!-- Copiar el directorio de informes si lo tenemos -->
         <copy todir="${dist.dir}/informes">
             <fileset dir="${src.dir}/informes"/>
         </copy>
+        <!-- Generar bat que instale nuestro programa en el PC -->
+        <echo file="${dist.dir}/Instalador.bat">REM Habilitar la visibilidad de las variables de entorno y cmd${line.separator}</echo>
+        <echo file="${dist.dir}/Instalador.bat" append="true">@setlocal enableextensions${line.separator}</echo>
+        <echo file="${dist.dir}/Instalador.bat" append="true">REM Cambiar el directorio actual a donde está ubicado este bat${line.separator}</echo>
+        <echo file="${dist.dir}/Instalador.bat" append="true">@cd /d "%~dp0"${line.separator}</echo>
+        <echo file="${dist.dir}/Instalador.bat" append="true">REM Copiar todos los archivos del directorio actual a "%PROGRAMFILES%\${application.title}"${line.separator}</echo>
+        <echo file="${dist.dir}/Instalador.bat" append="true">robocopy . "%PROGRAMFILES%\${application.title}" /e</echo>
     </target>
     <!--
 
